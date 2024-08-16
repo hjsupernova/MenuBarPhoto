@@ -1,0 +1,39 @@
+# 기본 적용되는 룰에서 사용하지 않는 룰
+disabled_rules:
+  - unused_closure_parameter # 미사용 클로저 파라미터 _ 대체
+  - file_length # 파일 줄 길이 제한
+
+# 옵트 인 룰
+opt_in_rules:
+  - empty_count # count보다 isEmpty 선호
+
+# 식별자 네이밍 커스텀 정의
+identifier_name:
+    min_length:
+        warning: 0
+        error: 0
+    max_length:
+        warning: 120
+        error: 120
+
+# 콜론 커스텀 정의
+colon:
+  apply_to_dictionaries: false # 딕셔너리에서 콜론이 키 옆에 있어야 하는 룰 미적용
+
+# 행 길이 커스텀 정의
+line_length:
+  warning: 130
+  ignores_urls: true # URL에 대해 행 길이 제한 미적용
+  ignores_comments: true # 코멘트에 대해 행 길이 제한 미적용
+  ignores_interpolated_strings: true # 보간된 문자열 행 길이 제한 미적용
+
+# 룰 적용할 파일 경로
+included:
+  - MenuBarPhoto
+
+# 룰 적용 제외할 파일 (  `included`보다 우선순위 높음 )
+excluded:
+  - Carthage
+  - Pods
+  - Source/ExcludedFolder
+  - Source/ExcludedFile.swift
