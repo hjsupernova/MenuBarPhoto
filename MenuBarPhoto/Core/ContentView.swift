@@ -24,6 +24,7 @@ struct ContentView: View {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var photos: [Photo]
     @State private var isHovering = false
+    @State private var scrolledID: Int?
 
     init(photos: [Photo]) {
         self._photos = State(initialValue: photos)
@@ -32,41 +33,53 @@ struct ContentView: View {
         VStack {
             if !photos.isEmpty {
                 GeometryReader { geo in
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack(spacing: 0.0, content: {
-                                ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
-                                    if let image = photo.photoData?.toSwiftUIImage() {
-                                        ZStack {
-                                            image
-                                                .resizable()
-                                                .frame(width: geo.size.width, height: geo.size.height)
+                        ZStack {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(spacing: 0.0, content: {
+                                    ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
+                                        if let image = photo.photoData?.toSwiftUIImage() {
+                                            ZStack {
+                                                image
+                                                    .resizable()
+                                                    .frame(width: geo.size.width, height: geo.size.height)
 
-                                            if isHovering {
-                                                VStack {
-                                                    HStack {
-                                                        Spacer()
+                                                if isHovering {
+                                                    VStack {
+                                                        HStack {
+                                                            Spacer()
 
-                                                        Button {
-                                                            CoreDataStack.shared.deletePhoto(id: photo.photoId)
-                                                            photos = CoreDataStack.shared.fetchPhotos()
-                                                        } label: {
-                                                            Image(systemName: "trash")
-                                                                .foregroundColor(.red)
-                                                                .padding()
+                                                            Button {
+                                                                CoreDataStack.shared.deletePhoto(id: photo.photoId)
+                                                                photos = CoreDataStack.shared.fetchPhotos()
+                                                            } label: {
+                                                                Image(systemName: "trash")
+                                                                    .foregroundColor(.red)
+                                                                    .padding()
+                                                            }
                                                         }
-                                                    }
 
-                                                    Spacer()
+                                                        Spacer()
+                                                    }
                                                 }
                                             }
+                                            .id(index)
                                         }
                                     }
-                                }
-                            })
-                            .scrollTargetLayout()
-                        }
-                        .scrollTargetBehavior(.viewAligned)
+                                })
+                                .scrollTargetLayout()
+                            }
+                            .scrollPosition(id: $scrolledID)
+                            .scrollTargetBehavior(.viewAligned)
 
+                            if isHovering {
+                                VStack {
+                                    Spacer()
+
+                                    PageControl(numberOfPages: photos.count, currentPage: $scrolledID)
+                                        .padding()
+                                }
+                            }
+                        }
                 }
                 .onHover { hovering in
                     isHovering = hovering
@@ -120,15 +133,15 @@ struct ContentView: View {
 // #Preview {
 //    ContentView()
 // }
-struct DotsIndicator: View {
-    let numberOfDots: Int
-    let selectedIndex: Int
+struct PageControl: View {
+    let numberOfPages: Int
+    @Binding var currentPage: Int?
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(0..<numberOfDots, id: \.self) { index in
+            ForEach(0..<numberOfPages, id: \.self) { page in
                 Circle()
-                    .fill(index == selectedIndex ? Color.black : Color.gray)
+                    .fill(page == (currentPage ?? 0) ? Color.blue : Color.gray)
                     .frame(width: 8, height: 8)
             }
         }

@@ -52,31 +52,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func openImageWindow() {
-        let contentView = ImageView()
-
-        if imageWindow != nil {
-            imageWindow.close()
-        }
-
-        imageWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 300, height: 300),
-            styleMask: [.resizable, .titled, .closable],
-            backing: .buffered,
-            defer: false
-        )
-
-        imageWindow.contentView = NSHostingView(rootView: contentView)
-        imageWindow.makeKeyAndOrderFront(nil)
-
-        NSApplication.shared.activate()
-
-        let controller = NSWindowController(window: imageWindow)
-        controller.showWindow(self)
-
-        imageWindow.center()
-        imageWindow.orderFrontRegardless()
-    }
+//    func openImageWindow() {
+//        let contentView = ImageView()
+//
+//        if imageWindow != nil {
+//            imageWindow.close()
+//        }
+//
+//        imageWindow = NSWindow(
+//            contentRect: NSRect(x: 0, y: 0, width: 300, height: 300),
+//            styleMask: [.resizable, .titled, .closable],
+//            backing: .buffered,
+//            defer: false
+//        )
+//
+//        imageWindow.contentView = NSHostingView(rootView: contentView)
+//        imageWindow.makeKeyAndOrderFront(nil)
+//
+//        NSApplication.shared.activate()
+//
+//        let controller = NSWindowController(window: imageWindow)
+//        controller.showWindow(self)
+//
+//        imageWindow.center()
+//        imageWindow.orderFrontRegardless()
+//    }
 
     func openSettingsWindow() {
         let contentView = SettingsScreen()
@@ -107,61 +107,61 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
-struct ImageView: View {
-    @State private var images: [Image] = []
-    @State private var selectedIndex: Int = 0
-
-    var body: some View {
-        VStack {
-            if !images.isEmpty {
-                GeometryReader { geometry in
-                    ZStack {
-                        ForEach(0..<images.count, id: \.self) { index in
-                            images[index]
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                                .opacity(index == selectedIndex ? 1.0 : 0.0)
-                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                                .animation(.easeInOut, value: selectedIndex)
-                        }
-                        VStack {
-                            Spacer()
-
-                            HStack {
-                                Spacer()
-                                DotsIndicator(numberOfDots: images.count, selectedIndex: selectedIndex)
-                                    .padding()
-                            }
-                        }
-                    }
-                    .gesture(DragGesture().onEnded { value in
-                        if value.translation.width < -50 {
-                            // Swipe left
-                            withAnimation {
-                                selectedIndex = (selectedIndex + 1) % images.count
-                            }
-                        } else if value.translation.width > 50 {
-                            // Swipe right
-                            withAnimation {
-                                selectedIndex = (selectedIndex - 1 + images.count) % images.count
-                            }
-                        }
-                    })
-                }
-            }
-        }
-        .frame(width: 300, height: 300)
-        .windowLevel(.floating + 1)
-        .onAppear {
-            let savedPhotos = CoreDataStack.shared.fetchPhotos()
-            let data = savedPhotos.compactMap { $0.photoData}
-
-            for data in data {
-                if let nsImage = NSImage(data: data) {
-                    images.append(Image(nsImage: nsImage))
-                }
-            }
-        }
-    }
-}
+//struct ImageView: View {
+//    @State private var images: [Image] = []
+//    @State private var selectedIndex: Int = 0
+//
+//    var body: some View {
+//        VStack {
+//            if !images.isEmpty {
+//                GeometryReader { geometry in
+//                    ZStack {
+//                        ForEach(0..<images.count, id: \.self) { index in
+//                            images[index]
+//                                .resizable()
+//                                .scaledToFill()
+//                                .frame(width: geometry.size.width, height: geometry.size.height)
+//                                .opacity(index == selectedIndex ? 1.0 : 0.0)
+//                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+//                                .animation(.easeInOut, value: selectedIndex)
+//                        }
+//                        VStack {
+//                            Spacer()
+//
+//                            HStack {
+//                                Spacer()
+//                                PageControl(numberOfPages: images.count, currentPage: $selectedIndex)
+//                                    .padding()
+//                            }
+//                        }
+//                    }
+//                    .gesture(DragGesture().onEnded { value in
+//                        if value.translation.width < -50 {
+//                            // Swipe left
+//                            withAnimation {
+//                                selectedIndex = (selectedIndex + 1) % images.count
+//                            }
+//                        } else if value.translation.width > 50 {
+//                            // Swipe right
+//                            withAnimation {
+//                                selectedIndex = (selectedIndex - 1 + images.count) % images.count
+//                            }
+//                        }
+//                    })
+//                }
+//            }
+//        }
+//        .frame(width: 300, height: 300)
+//        .windowLevel(.floating + 1)
+//        .onAppear {
+//            let savedPhotos = CoreDataStack.shared.fetchPhotos()
+//            let data = savedPhotos.compactMap { $0.photoData}
+//
+//            for data in data {
+//                if let nsImage = NSImage(data: data) {
+//                    images.append(Image(nsImage: nsImage))
+//                }
+//            }
+//        }
+//    }
+//}
