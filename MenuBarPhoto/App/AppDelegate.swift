@@ -32,8 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.popover.behavior = .transient
 
         let savedPhotos = CoreDataStack.shared.fetchPhotos()
-        let data = savedPhotos.compactMap { $0.imageData}
-        self.popover.contentViewController = NSHostingController(rootView: ContentView(data: data))
+        self.popover.contentViewController = NSHostingController(rootView: ContentView(photos: savedPhotos))
         self.popover.animates = false
 
         KeyboardShortcuts.onKeyUp(for: .togglePopover) {
@@ -156,7 +155,7 @@ struct ImageView: View {
         .windowLevel(.floating + 1)
         .onAppear {
             let savedPhotos = CoreDataStack.shared.fetchPhotos()
-            let data = savedPhotos.compactMap { $0.imageData}
+            let data = savedPhotos.compactMap { $0.photoData}
 
             for data in data {
                 if let nsImage = NSImage(data: data) {
@@ -164,6 +163,5 @@ struct ImageView: View {
                 }
             }
         }
-
     }
 }

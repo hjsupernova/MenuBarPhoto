@@ -44,10 +44,9 @@ extension CoreDataStack {
     func savePhoto(_ data: Data) {
         let photo = Photo(context: persistentContainer.viewContext)
 
-//        guard let imageData = bitmap.jpegData(compressionQuality: 0.5) else { return }
-
-        photo.imageData = data
+        photo.photoData = data
         photo.dateCreated = Date()
+        photo.photoId = UUID()
 
         save()
     }
@@ -64,5 +63,22 @@ extension CoreDataStack {
             print("Error fetching photos: \(error)")
             return []
         }
+    }
+
+    func deletePhoto(id: UUID?) {
+        guard let id else { return }
+        let request = NSFetchRequest<Photo>(entityName: "Photo")
+        request.predicate = NSPredicate(format: "photoId == %@", id as CVarArg)
+
+        do {
+            let results = try persistentContainer.viewContext.fetch(request)
+            if let photoToDelete = results.first {
+                persistentContainer.viewContext.delete(photoToDelete)
+                save()
+            }
+        } catch {
+            print("Error deleting photo: \(error)")
+        }
+
     }
 }

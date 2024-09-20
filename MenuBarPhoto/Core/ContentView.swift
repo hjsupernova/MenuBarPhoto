@@ -7,33 +7,69 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @State private var isTargeted: Bool = false
-    @State private var images: [Image] = []
-    @State private var selectedIndex: Int = 0
+extension Data {
 
-    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    var data: [Data] = []
-
-    init(data: [Data] = []) {
-        self.data = data
+    func toNSImage() -> NSImage? {
+        return NSImage(data: self)
     }
 
+    func toSwiftUIImage() -> Image? {
+        guard let nsImage = self.toNSImage() else { return nil }
+        return Image(nsImage: nsImage)
+    }
+}
+
+struct ContentView: View {
+    @State private var isTargeted: Bool = false
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @State private var photos: [Photo] = []
+    @State private var isHovering = false
+
+    init(photos: [Photo]) {
+        self.photos = photos
+    }
     var body: some View {
         VStack {
-            if !images.isEmpty {
+            if !photos.isEmpty {
                 GeometryReader { geo in
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(spacing: 0.0, content: {
-                            ForEach(0..<images.count, id: \.self) { index in
-                                images[index]
-                                    .resizable()
-                                    .frame(width: geo.size.width, height: geo.size.height)
-                            }
-                        })
-                        .scrollTargetLayout()
-                    }
-                    .scrollTargetBehavior(.viewAligned)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHStack(spacing: 0.0, content: {
+                                ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
+                                    if let image = photo.photoData?.toSwiftUIImage() {
+                                        ZStack {
+                                            image
+                                                .resizable()
+                                                .frame(width: geo.size.width, height: geo.size.height)
+      
+                                            if isHovering {
+                                                VStack {
+                                                    HStack {
+                                                        Spacer()
+
+                                                        Button {
+                                                            CoreDataStack.shared.deletePhoto(id: photo.photoId)
+                                                            photos = CoreDataStack.shared.fetchPhotos()
+                                                        } label: {
+                                                            Image(systemName: "trash")
+                                                                .foregroundColor(.red)
+                                                                .padding()
+                                                        }
+                                                    }
+
+                                                    Spacer()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                            .scrollTargetLayout()
+                        }
+                        .scrollTargetBehavior(.viewAligned)
+
+                }
+                .onHover { hovering in
+                    isHovering = hovering
                 }
             } else {
                 ZStack {
@@ -62,29 +98,21 @@ struct ContentView: View {
             }
         }
         .animation(.default, value: isTargeted)
-        .onDrop(of: [.image], isTargeted: $isTargeted, perform: { providers in
+        .onDrop(of: [.image], isTargeted: $isTargeted) { providers in
             guard let provider = providers.first else { return false }
 
             _ = provider.loadDataRepresentation(for: .image, completionHandler: { data, error in
                 if error == nil, let data {
                     CoreDataStack.shared.savePhoto(data)
+                    
+                    let newPhotos = CoreDataStack.shared.fetchPhotos()
 
                     DispatchQueue.main.async {
-                        if let nsImage = NSImage(data: data) {
-                            images.append(Image(nsImage: nsImage))
-                        }
+                        photos = newPhotos
                     }
                 }
             })
             return true
-        })
-        .onAppear {
-            print("onAppear called ")
-            for data in data {
-                if let nsImage = NSImage(data: data) {
-                    images.append(Image(nsImage: nsImage))
-                }
-            }
         }
     }
 }
