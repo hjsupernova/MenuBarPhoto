@@ -90,11 +90,8 @@ struct ContentView: View {
                     isHovering = hovering
                 }
             } else {
-                ZStack {
-                    Image(systemName: "globe")
-                        .resizable()
-                        .scaledToFit()
-                }
+                Text("Drag your image here")
+                    .frame(width: 300, height: 300)
             }
         }
         .overlay {
@@ -151,5 +148,6 @@ struct PageControl: View {
 }
 
 #Preview {
-    ContentView(photos: CoreDataStack.shared.samplePhotos)
+//    ContentView(photos: CoreDataStack.shared.samplePhotos)
+    ContentView(photos: [])
 }
