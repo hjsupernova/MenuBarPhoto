@@ -135,9 +135,6 @@ struct ContentView: View {
     }
 }
 
-// #Preview {
-//    ContentView()
-// }
 struct PageControl: View {
     let numberOfPages: Int
     @Binding var currentPage: Int?
@@ -151,4 +148,8 @@ struct PageControl: View {
             }
         }
     }
+}
+
+#Preview {
+    ContentView(photos: CoreDataStack.shared.samplePhotos)
 }
