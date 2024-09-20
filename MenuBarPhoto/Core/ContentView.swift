@@ -22,74 +22,25 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if !images.isEmpty {
-                GeometryReader { geometry in
-                    ZStack {
-                        ForEach(0..<images.count, id: \.self) { index in
-                            images[index]
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                                .opacity(index == selectedIndex ? 1.0 : 0.0)
-                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                                .animation(.easeInOut, value: selectedIndex)
-                        }
-                        VStack {
-                            Spacer()
-
-                            HStack {
-                                Button {
-                                    appDelegate.openImageWindow()
-                                } label: {
-                                    Image(systemName: "photo")
-                                }
-
-                                Spacer()
-
-                                Button {
-                                    appDelegate.openSettingsWindow()
-                                } label: {
-                                    Image(systemName: "gearshape.fill")
-                                }
-                                DotsIndicator(numberOfDots: images.count, selectedIndex: selectedIndex)
-                                    .padding()
+                GeometryReader { geo in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack(spacing: 0.0, content: {
+                            ForEach(0..<images.count, id: \.self) { index in
+                                images[index]
+                                    .resizable()
+                                    .frame(width: geo.size.width, height: geo.size.height)
                             }
-                        }
+                        })
+                        .scrollTargetLayout()
                     }
-                    .gesture(DragGesture().onEnded { value in
-                        if value.translation.width < -50 {
-                            // Swipe left
-                            withAnimation {
-                                selectedIndex = (selectedIndex + 1) % images.count
-                            }
-                        } else if value.translation.width > 50 {
-                            // Swipe right
-                            withAnimation {
-                                selectedIndex = (selectedIndex - 1 + images.count) % images.count
-                            }
-                        }
-                    })
+                    .scrollTargetBehavior(.viewAligned)
                 }
             } else {
                 ZStack {
                     Image(systemName: "globe")
                         .resizable()
                         .scaledToFit()
-
-                    VStack {
-                        Spacer()
-
-                        HStack {
-                            Spacer()
-
-                            Button {
-                                appDelegate.openImageWindow()
-                            } label: {
-                                Image(systemName: "photo")
-                            }
-                        }
-                    }
                 }
-
             }
         }
         .overlay {
