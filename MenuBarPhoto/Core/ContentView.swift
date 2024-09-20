@@ -53,8 +53,13 @@ struct ContentView: View {
                                                                 photos = CoreDataStack.shared.fetchPhotos()
                                                             } label: {
                                                                 Image(systemName: "trash")
-                                                                    .foregroundColor(.red)
-                                                                    .padding()
+                                                            }
+
+                                                            Button {
+                                                                appDelegate.openSettingsWindow()
+                                                            } label: {
+                                                                Image(systemName: "gear.circle")
+
                                                             }
                                                         }
 
