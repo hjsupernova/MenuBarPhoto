@@ -22,11 +22,11 @@ extension Data {
 struct ContentView: View {
     @State private var isTargeted: Bool = false
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @State private var photos: [Photo] = []
+    @State private var photos: [Photo]
     @State private var isHovering = false
 
     init(photos: [Photo]) {
-        self.photos = photos
+        self._photos = State(initialValue: photos)
     }
     var body: some View {
         VStack {
@@ -40,7 +40,7 @@ struct ContentView: View {
                                             image
                                                 .resizable()
                                                 .frame(width: geo.size.width, height: geo.size.height)
-      
+
                                             if isHovering {
                                                 VStack {
                                                     HStack {
