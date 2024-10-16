@@ -17,6 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var imageWindow: NSWindow!
     private var aboutWindow: NSWindow!
     private var settingsWindow: NSWindow!
+    private var cropWindow: NSWindow!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -52,32 +53,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-//    func openImageWindow() {
-//        let contentView = ImageView()
-//
-//        if imageWindow != nil {
-//            imageWindow.close()
-//        }
-//
-//        imageWindow = NSWindow(
-//            contentRect: NSRect(x: 0, y: 0, width: 300, height: 300),
-//            styleMask: [.resizable, .titled, .closable],
-//            backing: .buffered,
-//            defer: false
-//        )
-//
-//        imageWindow.contentView = NSHostingView(rootView: contentView)
-//        imageWindow.makeKeyAndOrderFront(nil)
-//
-//        NSApplication.shared.activate()
-//
-//        let controller = NSWindowController(window: imageWindow)
-//        controller.showWindow(self)
-//
-//        imageWindow.center()
-//        imageWindow.orderFrontRegardless()
-//    }
-
     func openSettingsWindow() {
         let contentView = SettingsScreen()
 
@@ -105,63 +80,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsWindow.center()
         settingsWindow.orderFrontRegardless()
     }
-}
 
-//struct ImageView: View {
-//    @State private var images: [Image] = []
-//    @State private var selectedIndex: Int = 0
-//
-//    var body: some View {
-//        VStack {
-//            if !images.isEmpty {
-//                GeometryReader { geometry in
-//                    ZStack {
-//                        ForEach(0..<images.count, id: \.self) { index in
-//                            images[index]
-//                                .resizable()
-//                                .scaledToFill()
-//                                .frame(width: geometry.size.width, height: geometry.size.height)
-//                                .opacity(index == selectedIndex ? 1.0 : 0.0)
-//                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-//                                .animation(.easeInOut, value: selectedIndex)
-//                        }
-//                        VStack {
-//                            Spacer()
-//
-//                            HStack {
-//                                Spacer()
-//                                PageControl(numberOfPages: images.count, currentPage: $selectedIndex)
-//                                    .padding()
-//                            }
-//                        }
-//                    }
-//                    .gesture(DragGesture().onEnded { value in
-//                        if value.translation.width < -50 {
-//                            // Swipe left
-//                            withAnimation {
-//                                selectedIndex = (selectedIndex + 1) % images.count
-//                            }
-//                        } else if value.translation.width > 50 {
-//                            // Swipe right
-//                            withAnimation {
-//                                selectedIndex = (selectedIndex - 1 + images.count) % images.count
-//                            }
-//                        }
-//                    })
-//                }
-//            }
-//        }
-//        .frame(width: 300, height: 300)
-//        .windowLevel(.floating + 1)
-//        .onAppear {
-//            let savedPhotos = CoreDataStack.shared.fetchPhotos()
-//            let data = savedPhotos.compactMap { $0.photoData}
-//
-//            for data in data {
-//                if let nsImage = NSImage(data: data) {
-//                    images.append(Image(nsImage: nsImage))
-//                }
-//            }
-//        }
-//    }
-//}
+    func openCropWindow() {
+        let contentView = CropWindow(image: NSImage(named: "test")) { image, status in
+        }
+
+        if cropWindow != nil {
+            cropWindow.close()
+        }
+
+        cropWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 300, height: 300),
+            styleMask: [.closable, .titled],
+            backing: .buffered,
+            defer: false
+        )
+
+        cropWindow.title = "Crop your Image"
+        cropWindow.contentView = NSHostingView(rootView: contentView)
+        cropWindow.makeKeyAndOrderFront(nil)
+        cropWindow.styleMask.remove(.resizable)
+
+        NSApplication.shared.activate()
+        let controller = NSWindowController(window: cropWindow)
+        controller.showWindow(self)
+
+        cropWindow.center()
+        cropWindow.orderFrontRegardless()
+    }
+}

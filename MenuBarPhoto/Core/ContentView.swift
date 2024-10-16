@@ -49,6 +49,12 @@ struct ContentView: View {
                                                             Spacer()
 
                                                             Button {
+                                                                appDelegate.openCropWindow()
+                                                            } label: {
+                                                                Image(systemName: "scissors")
+                                                            }
+
+                                                            Button {
                                                                 CoreDataStack.shared.deletePhoto(id: photo.photoId)
                                                                 photos = CoreDataStack.shared.fetchPhotos()
                                                             } label: {

@@ -21,6 +21,7 @@
 		CE260D462C6F9193004B154F /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = CE260D452C6F9193004B154F /* .swiftlint.yml */; };
 		CE53247C2C6B607C00A04FB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE53247B2C6B607C00A04FB6 /* Assets.xcassets */; };
 		CE53247F2C6B607C00A04FB6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE53247E2C6B607C00A04FB6 /* Preview Assets.xcassets */; };
+		CE9F76462CB0257900011E5E /* CropWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9F76452CB0257900011E5E /* CropWindow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		CE53247B2C6B607C00A04FB6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE53247E2C6B607C00A04FB6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CE5324802C6B607C00A04FB6 /* MenuBarPhoto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBarPhoto.entitlements; sourceTree = "<group>"; };
+		CE9F76452CB0257900011E5E /* CropWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 			children = (
 				CE260D2B2C6F8FB7004B154F /* ContentView.swift */,
 				CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */,
+				CE9F76452CB0257900011E5E /* CropWindow.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 				CE260D2E2C6F8FB7004B154F /* SettingsScreen.swift in Sources */,
 				CE260D382C6F9021004B154F /* Model.xcdatamodeld in Sources */,
 				CE260D342C6F9002004B154F /* MenuBarPhotoApp.swift in Sources */,
+				CE9F76462CB0257900011E5E /* CropWindow.swift in Sources */,
 				CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */,
 				CE260D2D2C6F8FB7004B154F /* ContentView.swift in Sources */,
 				CE260D3B2C6F9097004B154F /* CoreDataStack.swift in Sources */,
