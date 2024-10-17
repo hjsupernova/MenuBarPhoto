@@ -13,6 +13,7 @@ import LaunchAtLogin
 
 struct SettingsScreen: View {
     @Default(.accessCount) var accessCount
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some View {
         Form {
@@ -26,6 +27,20 @@ struct SettingsScreen: View {
 
             Section {
                 Text("You have missed your SO for \(accessCount) times")
+            }
+
+            Section {
+                HStack {
+                    Text("Quit Menubar Gallery")
+
+                    Spacer()
+
+                    Button {
+                        appDelegate.terminate()
+                    } label: {
+                        Image(systemName: "power")
+                    }
+                }
             }
         }
         .formStyle(.grouped)

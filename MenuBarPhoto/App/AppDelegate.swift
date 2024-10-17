@@ -111,4 +111,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         cropWindow.center()
         cropWindow.orderFrontRegardless()
     }
+
+    func terminate() {
+        NSApplication.shared.terminate(self)
+    }
 }
