@@ -33,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.popover.behavior = .transient
 
         let savedPhotos = CoreDataStack.shared.fetchPhotos()
-        self.popover.contentViewController = NSHostingController(rootView: ContentView(photos: savedPhotos))
+        self.popover.contentViewController = NSHostingController(rootView: HomeView(photos: savedPhotos))
         self.popover.animates = false
 
         KeyboardShortcuts.onKeyUp(for: .togglePopover) {
@@ -81,8 +81,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsWindow.orderFrontRegardless()
     }
 
-    func openCropWindow() {
-        let contentView = CropWindow(image: NSImage(named: "test")) { image, status in
+    func openCropWindow(photo: Photo) {
+        guard let nsImage = photo.photoData?.toNSImage() else { return }
+
+        let contentView = CropWindow(image: nsImage) { image, status in
         }
 
         if cropWindow != nil {

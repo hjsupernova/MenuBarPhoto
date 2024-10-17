@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D272C6F8F5B004B154F /* AppDelegate.swift */; };
-		CE260D2D2C6F8FB7004B154F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D2B2C6F8FB7004B154F /* ContentView.swift */; };
+		CE260D2D2C6F8FB7004B154F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D2B2C6F8FB7004B154F /* HomeView.swift */; };
 		CE260D2E2C6F8FB7004B154F /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */; };
 		CE260D312C6F8FBD004B154F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D2F2C6F8FBD004B154F /* Constants.swift */; };
 		CE260D322C6F8FBD004B154F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D302C6F8FBD004B154F /* Utilities.swift */; };
@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		CE260D272C6F8F5B004B154F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CE260D2B2C6F8FB7004B154F /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CE260D2B2C6F8FB7004B154F /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		CE260D2F2C6F8FBD004B154F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		CE260D302C6F8FBD004B154F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -67,7 +67,7 @@
 		CE260D292C6F8F65004B154F /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				CE260D2B2C6F8FB7004B154F /* ContentView.swift */,
+				CE260D2B2C6F8FB7004B154F /* HomeView.swift */,
 				CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */,
 				CE9F76452CB0257900011E5E /* CropWindow.swift */,
 			);
@@ -249,7 +249,7 @@
 				CE260D342C6F9002004B154F /* MenuBarPhotoApp.swift in Sources */,
 				CE9F76462CB0257900011E5E /* CropWindow.swift in Sources */,
 				CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */,
-				CE260D2D2C6F8FB7004B154F /* ContentView.swift in Sources */,
+				CE260D2D2C6F8FB7004B154F /* HomeView.swift in Sources */,
 				CE260D3B2C6F9097004B154F /* CoreDataStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

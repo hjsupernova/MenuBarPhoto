@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - View
+
 extension View {
     func accessHostingWindow(_ onWindow: @escaping (NSWindow?) -> Void) -> some View {
         modifier(WindowViewModifier(onWindow: onWindow))
@@ -70,4 +72,17 @@ private struct WindowAccessor: NSViewRepresentable {
 
     func updateNSView(_ nsView: NSView, context: Context) {}
 
+}
+
+// MARK: - Image
+
+extension Data {
+    func toNSImage() -> NSImage? {
+        return NSImage(data: self)
+    }
+
+    func toSwiftUIImage() -> Image? {
+        guard let nsImage = self.toNSImage() else { return nil }
+        return Image(nsImage: nsImage)
+    }
 }

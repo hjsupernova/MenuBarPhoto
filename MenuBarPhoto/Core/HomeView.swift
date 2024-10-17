@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  HomeView.swift
 //  MenuBarPhoto
 //
 //  Created by KHJ on 8/13/24.
@@ -7,19 +7,7 @@
 
 import SwiftUI
 
-extension Data {
-
-    func toNSImage() -> NSImage? {
-        return NSImage(data: self)
-    }
-
-    func toSwiftUIImage() -> Image? {
-        guard let nsImage = self.toNSImage() else { return nil }
-        return Image(nsImage: nsImage)
-    }
-}
-
-struct ContentView: View {
+struct HomeView: View {
     @State private var isTargeted: Bool = false
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var photos: [Photo]
@@ -49,7 +37,7 @@ struct ContentView: View {
                                                             Spacer()
 
                                                             Button {
-                                                                appDelegate.openCropWindow()
+                                                                appDelegate.openCropWindow(photo: photo)
                                                             } label: {
                                                                 Image(systemName: "scissors")
                                                             }
@@ -154,6 +142,6 @@ struct PageControl: View {
 }
 
 #Preview {
-//    ContentView(photos: CoreDataStack.shared.samplePhotos)
-    ContentView(photos: [])
+//    HomeView(photos: CoreDataStack.shared.samplePhotos)
+    HomeView(photos: [])
 }
