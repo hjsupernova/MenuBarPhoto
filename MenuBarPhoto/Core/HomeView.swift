@@ -25,7 +25,7 @@ struct HomeView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 0.0, content: {
                                     ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
-                                        if let image = photo.photoData?.toSwiftUIImage() {
+                                        if let image = photo.croppedPhotoData?.toSwiftUIImage() ?? photo.photoData?.toSwiftUIImage() {
                                             ZStack {
                                                 image
                                                     .resizable()

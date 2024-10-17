@@ -18,25 +18,43 @@ struct CropWindow: View {
     @State private var offset: CGSize = .zero
     @State private var lastSToredOffset: CGSize = .zero
     @GestureState private var isInteracting: Bool = false
+    
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        imageView()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background {
-                Color.black
-                    .ignoresSafeArea()
-            }
-    }
+        ZStack {
+            imageView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background {
+                    Color.black
+                        .ignoresSafeArea()
+                }
 
-//    let renderer = ImageRenderer(content: ImageView(true))
-//    renderer.scale = 10
-//
-//    renderer.proposedSize = .init(CGSize(width: 300, height: 300))
-//    if let image =  renderer.nsImage {
-//        onCrop(image,true)
-//    } else {
-//        onCrop(nil,false)
-//    }
+            VStack {
+                HStack {
+                    Spacer()
+
+                    Button {
+                        let renderer = ImageRenderer(content: imageView())
+                        renderer.scale = 10
+
+                        renderer.proposedSize = .init(CGSize(width: 300, height: 300))
+                        if let image =  renderer.nsImage {
+                            onCrop(image, true)
+                        } else {
+                            onCrop(nil, false)
+                        }
+
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
+                    }
+                }
+
+                Spacer()
+            }
+        }
+    }
 
     @ViewBuilder
     func imageView(_ hideGrids: Bool = false) -> some View {
@@ -128,9 +146,10 @@ struct CropWindow: View {
 }
 
 #Preview {
-    CropWindow(onCrop: { image, status in
+    CropWindow(image: NSImage(named: "test"), onCrop: { image, status in
         //
     })
+    .frame(width: 300, height: 300)
 }
 
 extension View {

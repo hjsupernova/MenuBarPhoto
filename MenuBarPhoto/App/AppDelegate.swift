@@ -85,6 +85,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let nsImage = photo.photoData?.toNSImage() else { return }
 
         let contentView = CropWindow(image: nsImage) { image, status in
+            if let data = image?.tiffRepresentation {
+                photo.croppedPhotoData = data
+
+                CoreDataStack.shared.save()
+            }
         }
 
         if cropWindow != nil {
