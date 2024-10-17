@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct CropWindow: View {
-    var image: NSImage?
-    /// 체크 버튼 탭시 크롭된 이미지와 결과 상태를 내보낸다.
-    var onCrop: (NSImage?, Bool) -> ()
+    var photo: Photo
 
     // Gestures
     @State private var scale: CGFloat = 1
@@ -18,7 +16,7 @@ struct CropWindow: View {
     @State private var offset: CGSize = .zero
     @State private var lastSToredOffset: CGSize = .zero
     @GestureState private var isInteracting: Bool = false
-    
+
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -39,10 +37,11 @@ struct CropWindow: View {
                         renderer.scale = 10
 
                         renderer.proposedSize = .init(CGSize(width: 300, height: 300))
-                        if let image =  renderer.nsImage {
-                            onCrop(image, true)
-                        } else {
-                            onCrop(nil, false)
+
+                        if let data = renderer.nsImage?.pngData {
+                            photo.croppedPhotoData = data
+
+                            CoreDataStack.shared.save()
                         }
 
                         dismiss()
@@ -57,13 +56,13 @@ struct CropWindow: View {
     }
 
     @ViewBuilder
-    func imageView(_ hideGrids: Bool = false) -> some View {
+    func imageView() -> some View {
         let cropSize = CGSize(width: 300, height: 300)
         GeometryReader { geo in
             let size = geo.size
 
-            if let image {
-                Image(nsImage: image)
+            if let image = photo.photoData?.toSwiftUIImage() {
+                image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .overlay {
@@ -145,17 +144,9 @@ struct CropWindow: View {
 
 }
 
-#Preview {
-    CropWindow(image: NSImage(named: "test"), onCrop: { image, status in
-        //
-    })
-    .frame(width: 300, height: 300)
-}
+//#Preview {
+//    CropWindow(photo: Photo()
+//    .frame(width: 300, height: 300)
+//}
 
-extension View {
-    @ViewBuilder
-    func frame(_ size: CGSize) -> some View {
-        self
-            .frame(width: size.width, height: size.height)
-    }
-}
+

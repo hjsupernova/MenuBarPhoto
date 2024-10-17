@@ -14,17 +14,17 @@ import KeyboardShortcuts
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
+
     private var imageWindow: NSWindow!
-    private var aboutWindow: NSWindow!
     private var settingsWindow: NSWindow!
     private var cropWindow: NSWindow!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
+//        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
 
         if let statusButton = statusItem.button {
-            statusButton.image = NSImage(systemSymbolName: "heart", accessibilityDescription: "photo")
+            statusButton.image = NSImage(systemSymbolName: "heart", accessibilityDescription: "Menubar Gallery")
             statusButton.action = #selector(togglePopover)
         }
 
@@ -39,7 +39,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         KeyboardShortcuts.onKeyUp(for: .togglePopover) {
             self.togglePopover()
         }
-
     }
 
     @objc func togglePopover() {
@@ -48,6 +47,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.popover.performClose(nil)
             } else {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+
+                /// Make the popover close when users interact with outside
+                /// Without this the popover will stay
+                popover.contentViewController?.view.window?.makeKey()
+
                 Defaults[.accessCount] += 1
             }
         }
@@ -72,7 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsWindow.makeKeyAndOrderFront(nil)
         settingsWindow.styleMask.remove(.resizable)
 
-        NSApplication.shared.activate(ignoringOtherApps: true)
+//        NSApplication.shared.activate()
 
         let controller = NSWindowController(window: settingsWindow)
         controller.showWindow(self)
@@ -82,15 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func openCropWindow(photo: Photo) {
-        guard let nsImage = photo.photoData?.toNSImage() else { return }
-
-        let contentView = CropWindow(image: nsImage) { image, status in
-            if let data = image?.tiffRepresentation {
-                photo.croppedPhotoData = data
-
-                CoreDataStack.shared.save()
-            }
-        }
+        let contentView = CropWindow(photo: photo)
 
         if cropWindow != nil {
             cropWindow.close()

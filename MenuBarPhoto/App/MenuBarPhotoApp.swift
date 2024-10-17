@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import KeyboardShortcuts
-
 @main
 struct MenuBarPhotoApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate

@@ -13,10 +13,11 @@ import LaunchAtLogin
 
 struct SettingsScreen: View {
     @Default(.accessCount) var accessCount
+
     var body: some View {
         Form {
             Section {
-                KeyboardShortcuts.Recorder("Toggle Popover", name: .togglePopover)
+                KeyboardShortcuts.Recorder("Show photos", name: .togglePopover)
             }
 
             Section {
@@ -24,7 +25,7 @@ struct SettingsScreen: View {
             }
 
             Section {
-                Text("You have missed Jana for \(accessCount) times")
+                Text("You have missed your SO for \(accessCount) times")
             }
         }
         .formStyle(.grouped)

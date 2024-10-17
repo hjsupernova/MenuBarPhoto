@@ -10,7 +10,7 @@ import CoreData
 
 class CoreDataStack {
     static let shared = CoreDataStack()
-    
+
     static var preview: CoreDataStack = {
         let result = CoreDataStack(inMemory: true)
         return result
@@ -97,7 +97,7 @@ extension CoreDataStack {
         let context = Self.preview.persistentContainer.viewContext
         var photos: [Photo] = []
 
-        for i in 0..<5  {
+        for i in 0..<5 {
             let systemName = "\(i).circle"
 
             // Create NSImage from the system name
