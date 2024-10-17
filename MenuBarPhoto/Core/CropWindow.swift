@@ -7,33 +7,26 @@
 
 import SwiftUI
 
+import Kingfisher
+
 struct CropWindow: View {
     var photo: Photo
 
-    // Gestures
-    @State private var scale: CGFloat = 1
-    @State private var lastScale: CGFloat = 0
-    @State private var offset: CGSize = .zero
-    @State private var lastSToredOffset: CGSize = .zero
-    @GestureState private var isInteracting: Bool = false
 
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         ZStack {
-            imageView()
+            CropView(photo: photo)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background {
-                    Color.black
-                        .ignoresSafeArea()
-                }
+                .background { Color.black.ignoresSafeArea() }
 
             VStack {
                 HStack {
                     Spacer()
 
                     Button {
-                        let renderer = ImageRenderer(content: imageView())
+                        let renderer = ImageRenderer(content: CropView(photo: photo))
                         renderer.scale = 10
 
                         renderer.proposedSize = .init(CGSize(width: 300, height: 300))
@@ -54,15 +47,26 @@ struct CropWindow: View {
             }
         }
     }
+}
 
-    @ViewBuilder
-    func imageView() -> some View {
-        let cropSize = CGSize(width: 300, height: 300)
+struct CropView: View {
+    let cropSize = CGSize(width: 300, height: 300)
+    var photo: Photo
+
+    // Gestures
+    @State private var scale: CGFloat = 1
+    @State private var lastScale: CGFloat = 0
+    @State private var offset: CGSize = .zero
+    @State private var lastSToredOffset: CGSize = .zero
+
+    @GestureState private var isInteracting: Bool = false
+
+    var body: some View {
         GeometryReader { geo in
             let size = geo.size
 
-            if let image = photo.photoData?.toSwiftUIImage() {
-                image
+            if let image = photo.photoData {
+                KFImage(source: .provider(RawImageDataProvider(data: image, cacheKey: photo.photoId?.uuidString ?? UUID().uuidString)))
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .overlay {
@@ -141,9 +145,7 @@ struct CropWindow: View {
         )
         .frame(cropSize)
     }
-
 }
-
 //#Preview {
 //    CropWindow(photo: Photo()
 //    .frame(width: 300, height: 300)

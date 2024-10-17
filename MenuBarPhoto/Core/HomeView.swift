@@ -67,6 +67,7 @@ struct PhotoScrollView: View {
                                     ZStack {
                                         image
                                             .resizable()
+                                            .aspectRatio(contentMode: .fit)
                                             .frame(width: geo.size.width, height: geo.size.height)
 
                                         if isHovering {
