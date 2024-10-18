@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import Kingfisher
+
 struct HomeView: View {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
@@ -56,6 +58,7 @@ struct PhotoScrollView: View {
     @Binding var photos: [Photo]
     @Binding var scrolledID: Int?
     @Binding var isHovering: Bool
+    @State private var hoveredPhoto: Photo?
 
     var body: some View {
         GeometryReader { geo in
@@ -63,24 +66,15 @@ struct PhotoScrollView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: 0.0) {
                             ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
-                                if let image = photo.croppedPhotoData?.toSwiftUIImage() ?? photo.photoData?.toSwiftUIImage() {
+                                if let data = photo.photoData {
                                     ZStack {
-                                        image
+                                        KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: photo.photoId?.uuidString ?? index.description)))
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: geo.size.width, height: geo.size.height)
-
-                                        if isHovering {
-                                            VStack {
-                                                HStack {
-                                                    Spacer()
-
-                                                    PhotoActionButtons(photos: $photos, photo: photo)
-                                                }
-
-                                                Spacer()
+                                            .onHover { hovering in
+                                                hoveredPhoto = hovering ? photo : nil
                                             }
-                                        }
                                     }
                                     .id(index)
                                 }
@@ -90,6 +84,18 @@ struct PhotoScrollView: View {
                     }
                     .scrollPosition(id: $scrolledID)
                     .scrollTargetBehavior(.viewAligned)
+                    
+                    if let hoveredPhoto, isHovering {
+                        VStack {
+                            HStack {
+                                Spacer()
+
+                                PhotoActionButtons(photos: $photos, photo: hoveredPhoto)
+                            }
+
+                            Spacer()
+                        }
+                    }
 
                     if isHovering {
                         VStack {
