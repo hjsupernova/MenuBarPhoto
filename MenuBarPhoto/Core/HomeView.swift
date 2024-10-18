@@ -66,9 +66,9 @@ struct PhotoScrollView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing: 0.0) {
                             ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
-                                if let data = photo.photoData {
+                                if let image = photo.croppedPhotoData?.toSwiftUIImage() ?? photo.photoData?.toSwiftUIImage() {
                                     ZStack {
-                                        KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: photo.photoId?.uuidString ?? index.description)))
+                                        image
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: geo.size.width, height: geo.size.height)
@@ -121,7 +121,19 @@ struct PhotoActionButtons: View {
     var body: some View {
         HStack {
             Button {
-                appDelegate.openCropWindow(photo: photo)
+                guard let image = photo.photoData?.toNSImage() else { return }
+                let contentRootView = CropImageView(image: image, targetSize: CGSize(width: 300, height: 300), targetScale: 10, fulfillTargetFrame: true) { result in
+
+                    do {
+                        photo.croppedPhotoData = try result.get().pngData
+                        CoreDataStack.shared.save()
+                    } catch {
+                        print("Error: Cannot crop the image")
+                    }
+                }
+
+                let contentView = NSHostingView(rootView: contentRootView)
+                appDelegate.openCropWindow(contentView: contentView)
             } label: {
                 Image(systemName: "scissors")
             }

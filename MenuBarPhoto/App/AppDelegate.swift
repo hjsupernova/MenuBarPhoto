@@ -86,22 +86,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsWindow.orderFrontRegardless()
     }
 
-    func openCropWindow(photo: Photo) {
-        let contentView = CropWindow(photo: photo)
-
+    func openCropWindow(contentView: NSView) {
         if cropWindow != nil {
             cropWindow.close()
         }
 
         cropWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 300, height: 300),
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 400),
             styleMask: [.closable, .titled],
             backing: .buffered,
             defer: false
         )
 
         cropWindow.title = "Crop your Image"
-        cropWindow.contentView = NSHostingView(rootView: contentView)
+        cropWindow.contentView = contentView
         cropWindow.makeKeyAndOrderFront(nil)
         cropWindow.styleMask.remove(.resizable)
 

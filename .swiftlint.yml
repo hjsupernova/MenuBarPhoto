@@ -37,3 +37,4 @@ excluded:
   - Pods
   - Source/ExcludedFolder
   - Source/ExcludedFile.swift
+  - MenuBarPhoto/Service/CropImage
