@@ -15,7 +15,7 @@ struct HomeView: View {
     @State private var isTargeted: Bool = false
     @State private var isHovering = false
     @State private var photos: [Photo]
-    @State private var scrolledID: Int?
+    @State private var scrolledID: Int? = 0
 
     init(photos: [Photo]) {
         self._photos = State(initialValue: photos)
@@ -84,31 +84,57 @@ struct PhotoScrollView: View {
                     }
                     .scrollPosition(id: $scrolledID)
                     .scrollTargetBehavior(.viewAligned)
-                    
+
                     if let hoveredPhoto, isHovering {
-                        VStack {
-                            HStack {
+                        Group {
+                            VStack {
+                                HStack {
+                                    Spacer()
+
+                                    PhotoActionButtons(photos: $photos, photo: hoveredPhoto)
+                                }
+
                                 Spacer()
 
-                                PhotoActionButtons(photos: $photos, photo: hoveredPhoto)
+                                PageControl(numberOfPages: photos.count, currentPage: $scrolledID)
+
                             }
 
-                            Spacer()
+                            PhotoMoveButton(scrolledID: $scrolledID, photos: $photos)
                         }
-                    }
-
-                    if isHovering {
-                        VStack {
-                            Spacer()
-
-                            PageControl(numberOfPages: photos.count, currentPage: $scrolledID)
-                                .padding()
-                        }
+                        .padding(8)
                     }
                 }
         }
         .onHover { hovering in
             isHovering = hovering
+        }
+    }
+}
+
+struct PhotoMoveButton: View {
+    @Binding var scrolledID: Int?
+    @Binding var photos: [Photo]
+
+    var body: some View {
+        HStack {
+            Button {
+                if let currentID = scrolledID {
+                    scrolledID = max(currentID - 1, 0)
+                }
+            } label: {
+                Image(systemName: "arrowshape.left.circle.fill")
+            }
+
+            Spacer()
+
+            Button {
+                if let currentID = scrolledID {
+                    scrolledID = min(currentID + 1, photos.count - 1)
+                }
+            } label: {
+                Image(systemName: "arrowshape.right.circle.fill")
+            }
         }
     }
 }

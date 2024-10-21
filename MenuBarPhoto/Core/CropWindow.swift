@@ -12,7 +12,6 @@ import Kingfisher
 struct CropWindow: View {
     var photo: Photo
 
-
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
