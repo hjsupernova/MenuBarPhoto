@@ -61,51 +61,48 @@ struct PhotoScrollView: View {
     @State private var hoveredPhoto: Photo?
 
     var body: some View {
-        GeometryReader { geo in
-                ZStack {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(spacing: 0.0) {
-                            ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
-                                if let image = photo.croppedPhotoData?.toSwiftUIImage() ?? photo.photoData?.toSwiftUIImage() {
-                                    ZStack {
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: geo.size.width, height: geo.size.height)
-                                            .onHover { hovering in
-                                                hoveredPhoto = hovering ? photo : nil
-                                            }
-                                    }
-                                    .id(index)
+        ZStack {
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 0.0) {
+                    ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
+                        if let data = photo.croppedPhotoData ?? photo.photoData, let cacheKey = photo.photoId {
+                            KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: cacheKey.uuidString)))
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 300, height: 300)
+                                .onHover { hovering in
+                                    hoveredPhoto = hovering ? photo : nil
                                 }
-                            }
+                                .id(index)
                         }
-                        .scrollTargetLayout()
-                    }
-                    .scrollPosition(id: $scrolledID)
-                    .scrollTargetBehavior(.viewAligned)
-
-                    if let hoveredPhoto, isHovering {
-                        Group {
-                            VStack {
-                                HStack {
-                                    Spacer()
-
-                                    PhotoActionButtons(photos: $photos, photo: hoveredPhoto)
-                                }
-
-                                Spacer()
-
-                                PageControl(numberOfPages: photos.count, currentPage: $scrolledID)
-
-                            }
-
-                            PhotoMoveButton(scrolledID: $scrolledID, photos: $photos)
-                        }
-                        .padding(8)
                     }
                 }
+                .scrollTargetLayout()
+            }
+            .scrollPosition(id: $scrolledID)
+            .scrollTargetBehavior(.viewAligned)
+
+            if let hoveredPhoto, isHovering {
+                Group {
+                    VStack {
+                        HStack {
+                            Spacer()
+
+                            PhotoActionButtons(photos: $photos, photo: hoveredPhoto)
+                        }
+
+                        Spacer()
+
+                        PageControl(numberOfPages: photos.count, currentPage: $scrolledID)
+
+                    }
+
+                    PhotoMoveButton(scrolledID: $scrolledID, photos: $photos)
+                }
+                .padding(8)
+            }
         }
+
         .onHover { hovering in
             isHovering = hovering
         }
@@ -166,7 +163,9 @@ struct PhotoActionButtons: View {
 
             Button {
                 CoreDataStack.shared.deletePhoto(id: photo.photoId)
+
                 photos = CoreDataStack.shared.fetchPhotos()
+
             } label: {
                 Image(systemName: "trash")
             }
@@ -176,6 +175,10 @@ struct PhotoActionButtons: View {
             } label: {
                 Image(systemName: "gear.circle")
 
+            }
+
+            Button("test") {
+                photos = CoreDataStack.shared.fetchPhotos()
             }
         }
     }
