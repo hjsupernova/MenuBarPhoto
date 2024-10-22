@@ -39,20 +39,19 @@ struct HomeView: View {
                 let deletedPhoto = oldValue.first { !newValue.contains($0) }
 
                 if let deletedIndex = oldValue.firstIndex(where: { $0.id == deletedPhoto?.id }) {
-                    // Case 1: First photo deleted
-                    if deletedIndex == 0 {
+                    // If there are photos to the right, select the next one
+                    if deletedIndex < newValue.count {
+                        scrolledID = newValue[deletedIndex].id
+                    } else if !newValue.isEmpty {
+                        scrolledID = newValue.last?.id
+                    } else {
                         scrolledID = nil
-                    }
-                    // Case 2: Last photo deleted
-                    else if deletedIndex == oldValue.count - 1 && oldValue.count > 1 {
-                        scrolledID = oldValue[deletedIndex - 1].id
-                    }
-                    // Case 3: Photo deleted from middle
-                    else {
-                        scrolledID = newValue[deletedIndex].id  // Get next photo's ID
                     }
                 }
             }
+        }
+        .onAppear {
+            scrolledID = photos.first?.id
         }
     }
 

@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
 
         if let statusButton = statusItem.button {
-            statusButton.image = NSImage(systemSymbolName: "heart", accessibilityDescription: "Menubar Gallery")
+            statusButton.image = NSImage(systemSymbolName: "photo.artframe", accessibilityDescription: "Menubar Gallery")
             statusButton.action = #selector(togglePopover)
         }
 
