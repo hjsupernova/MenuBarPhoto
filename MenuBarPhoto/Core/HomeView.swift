@@ -32,6 +32,28 @@ struct HomeView: View {
         .overlay(DropOverLay(isTargeted: $isTargeted))
         .animation(.default, value: isTargeted)
         .onDrop(of: [.image], isTargeted: $isTargeted, perform: addDroppedPhoto)
+        .onChange(of: photos) { oldValue, newValue in
+            if newValue.count > oldValue.count {
+                scrolledID = newValue.last?.id
+            } else {
+                let deletedPhoto = oldValue.first { !newValue.contains($0) }
+
+                if let deletedIndex = oldValue.firstIndex(where: { $0.id == deletedPhoto?.id }) {
+                    // Case 1: First photo deleted
+                    if deletedIndex == 0 {
+                        scrolledID = nil
+                    }
+                    // Case 2: Last photo deleted
+                    else if deletedIndex == oldValue.count - 1 && oldValue.count > 1 {
+                        scrolledID = oldValue[deletedIndex - 1].id
+                    }
+                    // Case 3: Photo deleted from middle
+                    else {
+                        scrolledID = newValue[deletedIndex].id  // Get next photo's ID
+                    }
+                }
+            }
+        }
     }
 
     private func addDroppedPhoto(providers: [NSItemProvider]) -> Bool {
@@ -63,13 +85,12 @@ struct PhotoScrollView: View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 0.0) {
-                    ForEach(photos, id: \.self) { photo in
+                    ForEach(photos, id: \.self.id) { photo in
                         if let data = photo.croppedPhotoData ?? photo.photoData {
                             KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: data.hashValue.description)))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 300, height: 300)
-                                .id(photo.id)
                         }
                     }
                 }
@@ -113,7 +134,6 @@ struct PhotoActionButtons: View {
     var body: some View {
         HStack {
             Button {
-
                 guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
                 guard let image = photo.photoData?.toNSImage() else { return }
 
@@ -207,7 +227,6 @@ struct PhotoMoveButton: View {
         scrolledID = photos[currentIndex + 1].id
     }
 }
-
 
 struct PageControl: View {
     @Binding var photos: [Photo]
