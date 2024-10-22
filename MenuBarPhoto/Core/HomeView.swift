@@ -15,7 +15,7 @@ struct HomeView: View {
     @State private var isTargeted: Bool = false
     @State private var isHovering = false
     @State private var photos: [Photo]
-    @State private var scrolledID: Int? = 0
+    @State private var scrolledID: Photo.ID?
 
     init(photos: [Photo]) {
         self._photos = State(initialValue: photos)
@@ -56,24 +56,20 @@ struct HomeView: View {
 
 struct PhotoScrollView: View {
     @Binding var photos: [Photo]
-    @Binding var scrolledID: Int?
+    @Binding var scrolledID: Photo.ID?
     @Binding var isHovering: Bool
-    @State private var hoveredPhoto: Photo?
 
     var body: some View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 0.0) {
-                    ForEach(Array(photos.enumerated()), id: \.element.photoId) { index, photo in
-                        if let data = photo.croppedPhotoData ?? photo.photoData, let cacheKey = photo.photoId {
-                            KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: cacheKey.uuidString)))
+                    ForEach(photos, id: \.self) { photo in
+                        if let data = photo.croppedPhotoData ?? photo.photoData {
+                            KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: data.hashValue.description)))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 300, height: 300)
-                                .onHover { hovering in
-                                    hoveredPhoto = hovering ? photo : nil
-                                }
-                                .id(index)
+                                .id(photo.id)
                         }
                     }
                 }
@@ -82,18 +78,18 @@ struct PhotoScrollView: View {
             .scrollPosition(id: $scrolledID)
             .scrollTargetBehavior(.viewAligned)
 
-            if let hoveredPhoto, isHovering {
+            if isHovering {
                 Group {
                     VStack {
                         HStack {
                             Spacer()
 
-                            PhotoActionButtons(photos: $photos, photo: hoveredPhoto)
+                            PhotoActionButtons(photos: $photos, scrolledID: $scrolledID)
                         }
 
                         Spacer()
 
-                        PageControl(numberOfPages: photos.count, currentPage: $scrolledID)
+                        PageControl(photos: $photos, scrolledID: $scrolledID)
 
                     }
 
@@ -109,50 +105,35 @@ struct PhotoScrollView: View {
     }
 }
 
-struct PhotoMoveButton: View {
-    @Binding var scrolledID: Int?
-    @Binding var photos: [Photo]
-
-    var body: some View {
-        HStack {
-            Button {
-                if let currentID = scrolledID {
-                    scrolledID = max(currentID - 1, 0)
-                }
-            } label: {
-                Image(systemName: "arrowshape.left.circle.fill")
-            }
-
-            Spacer()
-
-            Button {
-                if let currentID = scrolledID {
-                    scrolledID = min(currentID + 1, photos.count - 1)
-                }
-            } label: {
-                Image(systemName: "arrowshape.right.circle.fill")
-            }
-        }
-    }
-}
-
 struct PhotoActionButtons: View {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @Binding var photos: [Photo]
-    let photo: Photo
+    @Binding var scrolledID: Photo.ID?
 
     var body: some View {
         HStack {
             Button {
-                guard let image = photo.photoData?.toNSImage() else { return }
-                let contentRootView = CropImageView(image: image, targetSize: CGSize(width: 300, height: 300), targetScale: 10, fulfillTargetFrame: true) { result in
 
-                    do {
-                        photo.croppedPhotoData = try result.get().pngData
-                        CoreDataStack.shared.save()
-                    } catch {
-                        print("Error: Cannot crop the image")
-                    }
+                guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
+                guard let image = photo.photoData?.toNSImage() else { return }
+
+                let contentRootView = CropImageView(image: image,
+                                                    targetSize: CGSize(width: 300, height: 300),
+                                                    targetScale: 10,
+                                                    fulfillTargetFrame: true) { result in
+                        switch result {
+                        case .success(let image):
+                            photo.croppedPhotoData = image.pngData
+
+                            CoreDataStack.shared.save()
+
+                            DispatchQueue.main.async {
+                                photos = CoreDataStack.shared.fetchPhotos()
+                            }
+                        case .failure(let error):
+                            print("Error: Cannot crop the image")
+                        }
+
                 }
 
                 let contentView = NSHostingView(rootView: contentRootView)
@@ -162,10 +143,11 @@ struct PhotoActionButtons: View {
             }
 
             Button {
+                guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
+
                 CoreDataStack.shared.deletePhoto(id: photo.photoId)
 
                 photos = CoreDataStack.shared.fetchPhotos()
-
             } label: {
                 Image(systemName: "trash")
             }
@@ -177,22 +159,65 @@ struct PhotoActionButtons: View {
 
             }
 
-            Button("test") {
-                photos = CoreDataStack.shared.fetchPhotos()
-            }
         }
     }
 }
 
+struct PhotoMoveButton: View {
+    @Binding var scrolledID: Photo.ID?
+    @Binding var photos: [Photo]
+
+    var body: some View {
+        HStack {
+            Button(action: moveToPreviousPhoto) {
+                Image(systemName: "chevron.left.circle.fill")
+            }
+            .disabled(!canMoveToPrevious)
+
+            Spacer()
+
+            Button(action: moveToNextPhoto) {
+                Image(systemName: "chevron.right.circle.fill")
+            }
+            .disabled(!canMoveToNext)
+        }
+    }
+
+    private var currentIndex: Int? {
+        photos.firstIndex(where: { $0.id == scrolledID })
+    }
+
+    private var canMoveToPrevious: Bool {
+        guard let currentIndex = currentIndex else { return false }
+        return currentIndex > 0
+    }
+
+    private var canMoveToNext: Bool {
+        guard let currentIndex = currentIndex else { return false }
+        return currentIndex < photos.count - 1
+    }
+
+    private func moveToPreviousPhoto() {
+        guard let currentIndex = currentIndex, currentIndex > 0 else { return }
+        scrolledID = photos[currentIndex - 1].id
+    }
+
+    private func moveToNextPhoto() {
+        guard let currentIndex = currentIndex, currentIndex < photos.count - 1 else { return }
+        scrolledID = photos[currentIndex + 1].id
+    }
+}
+
+
 struct PageControl: View {
-    let numberOfPages: Int
-    @Binding var currentPage: Int?
+    @Binding var photos: [Photo]
+    @Binding var scrolledID: Photo.ID?
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(0..<numberOfPages, id: \.self) { page in
+            ForEach(photos, id: \.self) { photo in
                 Circle()
-                    .fill(page == (currentPage ?? 0) ? Color.blue : Color.gray)
+                    .fill(photo.id == scrolledID ? Color.blue : Color.gray)
                     .frame(width: 8, height: 8)
             }
         }

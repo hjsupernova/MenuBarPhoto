@@ -9,6 +9,7 @@ import SwiftUI
 
 import Kingfisher
 
+// 사용 안함
 struct CropWindow: View {
     var photo: Photo
 
@@ -35,7 +36,7 @@ struct CropWindow: View {
 
                             CoreDataStack.shared.save()
                         }
-
+                        
                         dismiss()
                     } label: {
                         Image(systemName: "checkmark")
@@ -64,8 +65,8 @@ struct CropView: View {
         GeometryReader { geo in
             let size = geo.size
 
-            if let image = photo.photoData {
-                KFImage(source: .provider(RawImageDataProvider(data: image, cacheKey: photo.photoId?.uuidString ?? UUID().uuidString)))
+            if let image = photo.photoData, let cacheKey = photo.photoId {
+                KFImage(source: .provider(RawImageDataProvider(data: image, cacheKey: cacheKey.uuidString)))
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .overlay {

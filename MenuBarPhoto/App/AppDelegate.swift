@@ -51,7 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                 /// Make the popover close when users interact with outside
                 /// Without this the popover will stay
-                popover.contentViewController?.view.window?.makeKey()
+//                popover.contentViewController?.view.window?.makeKey()
 
                 Defaults[.accessCount] += 1
             }
