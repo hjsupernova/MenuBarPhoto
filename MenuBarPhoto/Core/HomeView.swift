@@ -53,6 +53,7 @@ struct HomeView: View {
         .onAppear {
             scrolledID = photos.first?.id
         }
+        .environmentObject(appDelegate)
     }
 
     private func addDroppedPhoto(providers: [NSItemProvider]) -> Bool {
@@ -126,7 +127,7 @@ struct PhotoScrollView: View {
 }
 
 struct PhotoActionButtons: View {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @EnvironmentObject private var appDelegate: AppDelegate
     @Binding var photos: [Photo]
     @Binding var scrolledID: Photo.ID?
 

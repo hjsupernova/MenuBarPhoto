@@ -11,7 +11,7 @@ import SwiftUI
 import Defaults
 import KeyboardShortcuts
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
 
@@ -109,10 +109,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         cropWindow.center()
         cropWindow.orderFrontRegardless()
-    }
-
-    func terminate() {
-        NSApplication.shared.terminate(self)
     }
 }
 

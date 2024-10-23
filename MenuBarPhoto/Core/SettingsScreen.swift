@@ -13,7 +13,6 @@ import LaunchAtLogin
 
 struct SettingsScreen: View {
     @Default(.accessCount) var accessCount
-    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some View {
         Form {
@@ -36,7 +35,7 @@ struct SettingsScreen: View {
                     Spacer()
 
                     Button {
-                        appDelegate.terminate()
+                        NSApplication.shared.terminate(nil)
                     } label: {
                         Image(systemName: "power")
                     }
