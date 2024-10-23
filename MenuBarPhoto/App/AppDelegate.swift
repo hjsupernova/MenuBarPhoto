@@ -24,7 +24,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 //        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
 
         if let statusButton = statusItem.button {
-            statusButton.image = NSImage(systemSymbolName: "photo.artframe", accessibilityDescription: "Menubar Gallery")
+            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
+            statusButton.image = NSImage(systemSymbolName: "photo.artframe", accessibilityDescription: "Menubar Gallery")?.withSymbolConfiguration(config)
             statusButton.action = #selector(togglePopover)
         }
 
