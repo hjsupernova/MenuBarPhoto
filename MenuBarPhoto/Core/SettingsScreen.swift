@@ -17,7 +17,7 @@ struct SettingsScreen: View {
     var body: some View {
         Form {
             Section {
-                KeyboardShortcuts.Recorder("Show photos", name: .togglePopover)
+                KeyboardShortcuts.Recorder("Toggle Gallery", name: .togglePopover)
             }
 
             Section {
@@ -25,12 +25,8 @@ struct SettingsScreen: View {
             }
 
             Section {
-                Text("You have missed your SO for \(accessCount) times")
-            }
-
-            Section {
                 HStack {
-                    Text("Quit Menubar Gallery")
+                    Text("Quit Gallery")
 
                     Spacer()
 
