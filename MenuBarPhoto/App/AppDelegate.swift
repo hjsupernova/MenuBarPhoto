@@ -26,7 +26,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if let statusButton = statusItem.button {
             let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
             statusButton.image = NSImage(systemSymbolName: "photo.artframe", accessibilityDescription: "Menubar Gallery")?.withSymbolConfiguration(config)
-            statusButton.action = #selector(togglePopover)
+            statusButton.action = #selector(handleClick(_:))
+            statusButton.target = self
+            statusButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
 
         self.popover = NSPopover()
@@ -41,6 +43,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         KeyboardShortcuts.onKeyUp(for: .togglePopover) {
             self.togglePopover()
         }
+    }
+    @objc func handleClick(_ sender: NSButton) {
+        let event = NSApp.currentEvent!
+        if event.type == NSEvent.EventType.rightMouseUp {
+            showMenu()
+        } else {
+            togglePopover()
+        }
+    }
+
+    func showMenu() {
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Toggle Gallery", action: #selector(togglePopover), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettingsWindow), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Quit Gallery", action: #selector(quit), keyEquivalent: ""))
+
+        statusItem.menu = menu
+        statusItem.button?.performClick(nil)
+
+        statusItem.menu = nil
     }
 
     @objc func togglePopover() {
@@ -58,7 +81,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             }
         }
     }
-
+    
+    @objc
     func openSettingsWindow() {
         let contentView = SettingsScreen()
 
@@ -110,6 +134,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
         cropWindow.center()
         cropWindow.orderFrontRegardless()
+    }
+
+    @objc
+    func quit() {
+        NSApplication.shared.terminate(nil)
     }
 }
 

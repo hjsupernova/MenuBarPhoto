@@ -171,14 +171,6 @@ struct PhotoActionButtons: View {
             } label: {
                 Image(systemName: "trash")
             }
-
-            Button {
-                appDelegate.openSettingsWindow()
-            } label: {
-                Image(systemName: "gear.circle")
-
-            }
-
         }
     }
 }
