@@ -126,6 +126,34 @@ struct PhotoScrollView: View {
     }
 }
 
+struct ActionButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.body)
+            .frame(width: 16, height: 16)
+            .padding(4)
+            .background { Color.black.opacity(0.3) }
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 4))
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+    }
+}
+
+struct MoveButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.body)
+            .frame(width: 16, height: 16)
+            .padding(4)
+            .background { Color.black.opacity(0.3) }
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 4))
+            .opacity(!isEnabled ? 0.0 : configuration.isPressed ? 0.8 : 1.0)
+    }
+}
+
 struct PhotoActionButtons: View {
     @EnvironmentObject private var appDelegate: AppDelegate
     @Binding var photos: [Photo]
@@ -161,7 +189,7 @@ struct PhotoActionButtons: View {
             } label: {
                 Image(systemName: "scissors")
             }
-
+            .buttonStyle(ActionButtonStyle())
             Button {
                 guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
 
@@ -171,6 +199,7 @@ struct PhotoActionButtons: View {
             } label: {
                 Image(systemName: "trash")
             }
+            .buttonStyle(ActionButtonStyle())
         }
     }
 }
@@ -184,6 +213,7 @@ struct PhotoMoveButton: View {
             Button(action: moveToPreviousPhoto) {
                 Image(systemName: "chevron.left.circle.fill")
             }
+            .buttonStyle(MoveButtonStyle())
             .disabled(!canMoveToPrevious)
 
             Spacer()
@@ -191,6 +221,7 @@ struct PhotoMoveButton: View {
             Button(action: moveToNextPhoto) {
                 Image(systemName: "chevron.right.circle.fill")
             }
+            .buttonStyle(MoveButtonStyle())
             .disabled(!canMoveToNext)
         }
     }
