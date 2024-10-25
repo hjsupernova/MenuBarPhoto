@@ -29,7 +29,7 @@ struct HomeView: View {
                 InstructionText()
             }
         }
-        .overlay(DropOverLay(isTargeted: $isTargeted))
+        .overlay(DropOverLay(isTargeted: $isTargeted, photos: $photos))
         .animation(.default, value: isTargeted)
         .onDrop(of: [.image], isTargeted: $isTargeted, perform: addDroppedPhoto)
         .onChange(of: photos) { oldValue, newValue in
@@ -57,6 +57,7 @@ struct HomeView: View {
     }
 
     private func addDroppedPhoto(providers: [NSItemProvider]) -> Bool {
+        guard photos.count < 5 else { return false }
         guard let provider = providers.first else { return false }
 
         _ = provider.loadDataRepresentation(for: .image, completionHandler: { data, error in
@@ -284,23 +285,49 @@ struct InstructionText: View {
 
 struct DropOverLay: View {
     @Binding var isTargeted: Bool
+    @Binding var photos: [Photo]
 
     var body: some View {
         if isTargeted {
-            ZStack {
-                Color.black.opacity(0.7)
+            if photos.count < 5 {
+                ZStack {
+                    Color.black.opacity(0.7)
 
-                VStack(spacing: 8) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 60))
-                    Text("Drop your image here")
+                    VStack(spacing: 8) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 60))
+                        Text("Drop your image here")
+                    }
+                    .font(.title)
+                    .fontWeight(.heavy)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: 250)
+                    .multilineTextAlignment(.center)
                 }
-                .font(.largeTitle)
-                .fontWeight(.heavy)
-                .foregroundStyle(.white)
-                .frame(maxWidth: 250)
-                .multilineTextAlignment(.center)
+            } else {
+                ZStack {
+                    Color.black.opacity(0.7)
+
+                    VStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .font(.system(size: 60))
+                            .foregroundStyle(.white)
+
+                        Text("Image limit reached")
+                            .font(.title)
+                            .fontWeight(.heavy)
+
+                        Text("(Maximum 5 images)")
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .opacity(0.8)
+                    }
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: 250)
+                    .multilineTextAlignment(.center)
+                }
             }
+
         }
     }
 }
