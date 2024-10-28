@@ -90,7 +90,7 @@ struct PhotoScrollView: View {
                         if let data = photo.croppedPhotoData ?? photo.photoData {
                             KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: data.hashValue.description)))
                                 .resizable()
-                                .aspectRatio(contentMode: .fit)
+                                .aspectRatio(contentMode: .fill)
                                 .frame(width: 300, height: 300)
                         }
                     }
