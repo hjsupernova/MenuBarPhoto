@@ -24,8 +24,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 //        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
 
         if let statusButton = statusItem.button {
-            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
-            statusButton.image = NSImage(systemSymbolName: "photo.artframe", accessibilityDescription: "Menubar Gallery")?.withSymbolConfiguration(config)
+            let icon = NSImage(named: "icon-flower-frame")
+            icon?.size = NSSize(width: 24, height: 24)
+            icon?.isTemplate = true
+            statusButton.image = icon
             statusButton.action = #selector(handleClick(_:))
             statusButton.target = self
             statusButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
