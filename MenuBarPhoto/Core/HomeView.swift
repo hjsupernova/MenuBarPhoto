@@ -92,6 +92,7 @@ struct PhotoScrollView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 300, height: 300)
+                                .clipped()
                         }
                     }
                 }
