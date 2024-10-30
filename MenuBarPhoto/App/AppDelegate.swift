@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 //        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
 
         if let statusButton = statusItem.button {
-            let icon = NSImage(named: "icon-flower-frame")
+            let icon = NSImage(named: "bunny-svg")
             icon?.size = NSSize(width: 24, height: 24)
             icon?.isTemplate = true
             statusButton.image = icon
