@@ -90,6 +90,7 @@ struct PhotoScrollView: View {
                         if let data = photo.croppedPhotoData ?? photo.photoData {
                             KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: data.hashValue.description)))
                                 .resizable()
+                                .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 900, height: 900)))
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 300, height: 300)
                                 .clipped()
@@ -166,32 +167,21 @@ struct PhotoActionButtons: View {
             Button {
                 guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
                 guard let image = photo.photoData?.toNSImage() else { return }
-
-                let contentRootView = CropImageView(image: image,
+                let contentRootView = CropImageView(photo: photo,
+                                                    photos: $photos,
+                                                    image: image,
                                                     targetSize: CGSize(width: 300, height: 300),
-                                                    targetScale: 10,
-                                                    fulfillTargetFrame: true) { result in
-                        switch result {
-                        case .success(let image):
-                            photo.croppedPhotoData = image.pngData
-
-                            CoreDataStack.shared.save()
-
-                            DispatchQueue.main.async {
-                                photos = CoreDataStack.shared.fetchPhotos()
-                            }
-                        case .failure(let error):
-                            print("Error: Cannot crop the image")
-                        }
-
-                }
+                                                    targetScale: 3,
+                                                    fulfillTargetFrame: true)
 
                 let contentView = NSHostingView(rootView: contentRootView)
+
                 appDelegate.openCropWindow(contentView: contentView)
             } label: {
                 Image(systemName: "scissors")
             }
             .buttonStyle(ActionButtonStyle())
+
             Button {
                 guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
 

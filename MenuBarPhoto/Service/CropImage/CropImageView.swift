@@ -12,6 +12,9 @@ import UIKit
 
 /// A view that allows the user to crop an image.
 public struct CropImageView<Controls: View, CutHole: View>: View {
+    let photo: Photo
+    @Binding var photos: [Photo]
+
     /// Defines a custom view overlaid on the image cropper.
     ///
     /// - Parameters:
@@ -65,56 +68,60 @@ public struct CropImageView<Controls: View, CutHole: View>: View {
     /// A closure that will be called when the user finishes cropping.
     ///
     /// The error should be a ``CropError``.
-    public var onCrop: (Result<PlatformImage, Error>) -> Void
+//    public var onCrop: (Result<PlatformImage, Error>) -> Void
     var controls: ControlClosure<Controls>
     var cutHole: CutHoleClosure<CutHole>
-    /// Create a ``CropImageView`` with a custom controls view and a custom cut hole.
-    public init(
-        image: PlatformImage,
-        targetSize: CGSize,
-        targetScale: CGFloat = 1,
-        fulfillTargetFrame: Bool = true,
-        onCrop: @escaping (Result<PlatformImage, Error>) -> Void,
-        @ViewBuilder controls: @escaping ControlClosure<Controls>,
-        @ViewBuilder cutHole: @escaping CutHoleClosure<CutHole>
-    ) {
-        self.image = image
-        self.targetSize = targetSize
-        self.targetScale = targetScale
-        self.onCrop = onCrop
-        self.controls = controls
-        self.cutHole = cutHole
-    }
-    /// Create a ``CropImageView`` with a custom controls view and default cut hole.
-    public init(
-        image: PlatformImage,
-        targetSize: CGSize,
-        targetScale: CGFloat = 1,
-        fulfillTargetFrame: Bool = true,
-        onCrop: @escaping (Result<PlatformImage, Error>) -> Void,
-        @ViewBuilder controls: @escaping ControlClosure<Controls>
-    ) where CutHole == DefaultCutHoleView {
-        self.image = image
-        self.targetSize = targetSize
-        self.targetScale = targetScale
-        self.onCrop = onCrop
-        self.controls = controls
-        self.cutHole = { targetSize in
-            DefaultCutHoleView(targetSize: targetSize)
-        }
-    }
+//    /// Create a ``CropImageView`` with a custom controls view and a custom cut hole.
+//    public init(
+//        image: PlatformImage,
+//        targetSize: CGSize,
+//        targetScale: CGFloat = 1,
+//        fulfillTargetFrame: Bool = true,
+//        onCrop: @escaping (Result<PlatformImage, Error>) -> Void,
+//        @ViewBuilder controls: @escaping ControlClosure<Controls>,
+//        @ViewBuilder cutHole: @escaping CutHoleClosure<CutHole>
+//    ) {
+//        self.image = image
+//        self.targetSize = targetSize
+//        self.targetScale = targetScale
+//        self.onCrop = onCrop
+//        self.controls = controls
+//        self.cutHole = cutHole
+//    }
+//    /// Create a ``CropImageView`` with a custom controls view and default cut hole.
+//    public init(
+//        image: PlatformImage,
+//        targetSize: CGSize,
+//        targetScale: CGFloat = 1,
+//        fulfillTargetFrame: Bool = true,
+//        onCrop: @escaping (Result<PlatformImage, Error>) -> Void,
+//        @ViewBuilder controls: @escaping ControlClosure<Controls>
+//    ) where CutHole == DefaultCutHoleView {
+//        self.image = image
+//        self.targetSize = targetSize
+//        self.targetScale = targetScale
+//        self.onCrop = onCrop
+//        self.controls = controls
+//        self.cutHole = { targetSize in
+//            DefaultCutHoleView(targetSize: targetSize)
+//        }
+//    }
     /// Create a ``CropImageView`` with default UI elements.
     public init(
+        photo: Photo,
+        photos: Binding<[Photo]>,
         image: PlatformImage,
         targetSize: CGSize,
         targetScale: CGFloat = 1,
-        fulfillTargetFrame: Bool = true,
-        onCrop: @escaping (Result<PlatformImage, Error>) -> Void
+        fulfillTargetFrame: Bool = true
+//        onCrop: @escaping (Result<PlatformImage, Error>) -> Void
     ) where Controls == DefaultControlsView, CutHole == DefaultCutHoleView {
+        self.photo = photo
+        self._photos = photos
         self.image = image
         self.targetSize = targetSize
         self.targetScale = targetScale
-        self.onCrop = onCrop
+//        self.onCrop = onCrop
         self.controls = { $offset, $scale, $rotation, crop in
             DefaultControlsView(offset: $offset, scale: $scale, rotation: $rotation, crop: crop)
         }
@@ -211,10 +218,19 @@ public struct CropImageView<Controls: View, CutHole: View>: View {
     @MainActor var control: some View {
         controls($offset, $scale, $rotation) {
             do {
-                onCrop(.success(try crop()))
+//                o0nCrop(.success(try crop()))
+                let image = try crop()
+                photo.croppedPhotoData = image.pngData
+                
+                DispatchQueue.global().async {
+                    CoreDataStack.shared.save()
+                }
+//                DispatchQueue.main.async {
+                photos = CoreDataStack.shared.fetchPhotos()
+//                }
                 dismiss()
             } catch {
-                onCrop(.failure(error))
+//                onCrop(.failure(error))
                 dismiss()
             }
         }
@@ -228,55 +244,55 @@ public struct CropImageView<Controls: View, CutHole: View>: View {
     }
 }
 
-struct CropImageView_Previews: PreviewProvider {
-    struct PreviewView: View {
-        @State private var targetSize: CGSize = .init(width: 100, height: 100)
-        @State private var result: Result<PlatformImage, Error>? = nil
-
-        var body: some View {
-            VStack {
-                CropImageView(
-                    image: .init(contentsOfFile: "/Users/laosb/Downloads/png.png")!,
-                    targetSize: targetSize
-                ) {
-                    result = $0
-                }
-                .frame(height: 300)
-                Form {
-                    Section {
-                        TextField("Width", value: $targetSize.width, formatter: NumberFormatter())
-                        TextField("Height", value: $targetSize.height, formatter: NumberFormatter())
-                    } header: { Text("Crop Target Size") }
-                    Section {
-                        if let result {
-                            switch result {
-                            case let .success(croppedImage):
-#if os(macOS)
-                                Image(nsImage: croppedImage)
-#else
-                                Image(uiImage: croppedImage)
-#endif
-                            case let .failure(error):
-                                Text(error.localizedDescription)
-                                    .foregroundColor(.red)
-                            }
-                        } else {
-                            Text("Press \(Image(systemName: "checkmark.circle.fill")) to crop.")
-                        }
-                    } header: { Text("Result") }
-                }
-                #if os(macOS)
-                .formStyle(.grouped)
-                #endif
-            }
-        }
-    }
-
-    static var previews: some View {
-        PreviewView()
-        #if os(macOS)
-            .frame(width: 500)
-            .frame(minHeight: 600)
-        #endif
-    }
-}
+//struct CropImageView_Previews: PreviewProvider {
+//    struct PreviewView: View {
+//        @State private var targetSize: CGSize = .init(width: 100, height: 100)
+//        @State private var result: Result<PlatformImage, Error>? = nil
+//
+//        var body: some View {
+//            VStack {
+//                CropImageView(
+//                    image: .init(contentsOfFile: "/Users/laosb/Downloads/png.png")!,
+//                    targetSize: targetSize
+//                ) {
+//                    result = $0
+//                }
+//                .frame(height: 300)
+//                Form {
+//                    Section {
+//                        TextField("Width", value: $targetSize.width, formatter: NumberFormatter())
+//                        TextField("Height", value: $targetSize.height, formatter: NumberFormatter())
+//                    } header: { Text("Crop Target Size") }
+//                    Section {
+//                        if let result {
+//                            switch result {
+//                            case let .success(croppedImage):
+//#if os(macOS)
+//                                Image(nsImage: croppedImage)
+//#else
+//                                Image(uiImage: croppedImage)
+//#endif
+//                            case let .failure(error):
+//                                Text(error.localizedDescription)
+//                                    .foregroundColor(.red)
+//                            }
+//                        } else {
+//                            Text("Press \(Image(systemName: "checkmark.circle.fill")) to crop.")
+//                        }
+//                    } header: { Text("Result") }
+//                }
+//                #if os(macOS)
+//                .formStyle(.grouped)
+//                #endif
+//            }
+//        }
+//    }
+//
+//    static var previews: some View {
+//        PreviewView()
+//        #if os(macOS)
+//            .frame(width: 500)
+//            .frame(minHeight: 600)
+//        #endif
+//    }
+//}

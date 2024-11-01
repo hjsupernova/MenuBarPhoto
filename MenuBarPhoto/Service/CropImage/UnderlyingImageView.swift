@@ -112,9 +112,6 @@ struct UnderlyingImageView: View {
             .gesture(dragGesture)
             .gesture(magnificationgesture)
             .gesture(rotationGesture)
-            .onAppear {
-                setupScrollMonitor()
-            }
     }
 
     var dragGesture: some Gesture {
@@ -171,6 +168,9 @@ struct UnderlyingImageView: View {
             }
             .onHover { hovering in
                 isHovering = hovering
+            }
+            .onAppear {
+//                setupScrollMonitor()
             }
     }
 }
