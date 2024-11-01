@@ -11,35 +11,64 @@ import SwiftUI
 import Defaults
 import KeyboardShortcuts
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
+
     private var imageWindow: NSWindow!
-    private var aboutWindow: NSWindow!
     private var settingsWindow: NSWindow!
+    private var cropWindow: NSWindow!
+
+    private var eventMonitor: Any? // Reference to the event monitor
+    @Published var scrollEvent: NSEvent?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
+//        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
 
         if let statusButton = statusItem.button {
-            statusButton.image = NSImage(systemSymbolName: "heart", accessibilityDescription: "photo")
-            statusButton.action = #selector(togglePopover)
+            let icon = NSImage(named: "bunny-svg")
+            icon?.size = NSSize(width: 24, height: 24)
+            icon?.isTemplate = true
+            statusButton.image = icon
+            statusButton.action = #selector(handleClick(_:))
+            statusButton.target = self
+            statusButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
 
         self.popover = NSPopover()
         self.popover.contentSize = NSSize(width: 300, height: 300)
-        self.popover.behavior = .transient
-
-        let savedPhotos = CoreDataStack.shared.fetchPhotos()
-        let data = savedPhotos.compactMap { $0.imageData}
-        self.popover.contentViewController = NSHostingController(rootView: ContentView(data: data))
+        self.popover.behavior = .semitransient
         self.popover.animates = false
+
+        let hostingController = NSHostingController(rootView: HomeView(photos: CoreDataStack.shared.fetchPhotos()))
+        popover.backgroundColor = .white
+        self.popover.contentViewController = hostingController
 
         KeyboardShortcuts.onKeyUp(for: .togglePopover) {
             self.togglePopover()
         }
+    }
+    @objc func handleClick(_ sender: NSButton) {
+        let event = NSApp.currentEvent!
+        if event.type == NSEvent.EventType.rightMouseUp {
+            showMenu()
+        } else {
+            togglePopover()
+        }
+    }
 
+    func showMenu() {
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Toggle Gallery", action: #selector(togglePopover), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettingsWindow), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Quit Gallery", action: #selector(quit), keyEquivalent: ""))
+
+        statusItem.menu = menu
+        statusItem.button?.performClick(nil)
+
+        statusItem.menu = nil
     }
 
     @objc func togglePopover() {
@@ -48,37 +77,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.popover.performClose(nil)
             } else {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+
+                /// Make the popover close when users interact with outside
+                /// Without this the popover will stay
+//                popover.contentViewController?.view.window?.makeKey()
+
                 Defaults[.accessCount] += 1
             }
         }
     }
-
-    func openImageWindow() {
-        let contentView = ImageView()
-
-        if imageWindow != nil {
-            imageWindow.close()
-        }
-
-        imageWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 300, height: 300),
-            styleMask: [.resizable, .titled, .closable],
-            backing: .buffered,
-            defer: false
-        )
-
-        imageWindow.contentView = NSHostingView(rootView: contentView)
-        imageWindow.makeKeyAndOrderFront(nil)
-
-        NSApplication.shared.activate()
-
-        let controller = NSWindowController(window: imageWindow)
-        controller.showWindow(self)
-
-        imageWindow.center()
-        imageWindow.orderFrontRegardless()
-    }
-
+    
+    @objc
     func openSettingsWindow() {
         let contentView = SettingsScreen()
 
@@ -98,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsWindow.makeKeyAndOrderFront(nil)
         settingsWindow.styleMask.remove(.resizable)
 
-        NSApplication.shared.activate(ignoringOtherApps: true)
+//        NSApplication.shared.activate()
 
         let controller = NSWindowController(window: settingsWindow)
         controller.showWindow(self)
@@ -106,64 +115,99 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsWindow.center()
         settingsWindow.orderFrontRegardless()
     }
+
+    func openCropWindow(contentView: NSView) {
+        if cropWindow != nil {
+            cropWindow.close()
+        }
+
+        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel, handler: { event in
+            self.scrollEvent = event
+
+            return event
+        })
+
+        cropWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 400),
+            styleMask: [.closable, .titled],
+            backing: .buffered,
+            defer: false
+        )
+
+        cropWindow.title = "Crop your Image"
+        cropWindow.contentView = contentView
+        cropWindow.makeKeyAndOrderFront(nil)
+        cropWindow.styleMask.remove(.resizable)
+        cropWindow.delegate = self
+
+        NSApplication.shared.activate()
+        let controller = NSWindowController(window: cropWindow)
+        controller.showWindow(self)
+
+        cropWindow.center()
+        cropWindow.orderFrontRegardless()
+    }
+
+    @objc
+    func quit() {
+        NSApplication.shared.terminate(nil)
+    }
 }
 
-struct ImageView: View {
-    @State private var images: [Image] = []
-    @State private var selectedIndex: Int = 0
-
-    var body: some View {
-        VStack {
-            if !images.isEmpty {
-                GeometryReader { geometry in
-                    ZStack {
-                        ForEach(0..<images.count, id: \.self) { index in
-                            images[index]
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                                .opacity(index == selectedIndex ? 1.0 : 0.0)
-                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                                .animation(.easeInOut, value: selectedIndex)
-                        }
-                        VStack {
-                            Spacer()
-
-                            HStack {
-                                Spacer()
-                                DotsIndicator(numberOfDots: images.count, selectedIndex: selectedIndex)
-                                    .padding()
-                            }
-                        }
-                    }
-                    .gesture(DragGesture().onEnded { value in
-                        if value.translation.width < -50 {
-                            // Swipe left
-                            withAnimation {
-                                selectedIndex = (selectedIndex + 1) % images.count
-                            }
-                        } else if value.translation.width > 50 {
-                            // Swipe right
-                            withAnimation {
-                                selectedIndex = (selectedIndex - 1 + images.count) % images.count
-                            }
-                        }
-                    })
-                }
-            }
-        }
-        .frame(width: 300, height: 300)
-        .windowLevel(.floating + 1)
-        .onAppear {
-            let savedPhotos = CoreDataStack.shared.fetchPhotos()
-            let data = savedPhotos.compactMap { $0.imageData}
-
-            for data in data {
-                if let nsImage = NSImage(data: data) {
-                    images.append(Image(nsImage: nsImage))
-                }
-            }
+extension AppDelegate: NSWindowDelegate {
+    func windowWillClose(_ notification: Notification) {
+        // Clean up any references
+        if let eventMonitor {
+            NSEvent.removeMonitor(eventMonitor)
         }
 
+        eventMonitor = nil
+
+        cropWindow?.contentView = nil
+        cropWindow?.delegate = nil
+        cropWindow = nil
+    }
+}
+
+// NSPopover background color
+extension NSPopover {
+    private struct Keys {
+        static var backgroundViewKey = "backgroundKey"
+    }
+
+    private var backgroundView: NSView {
+        let bgView = objc_getAssociatedObject(self, &Keys.backgroundViewKey) as? NSView
+        if let view = bgView {
+            return view
+        }
+
+        let view = NSView()
+        objc_setAssociatedObject(self, &Keys.backgroundViewKey, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        NotificationCenter.default.addObserver(self, selector: #selector(popoverWillOpen(_:)), name: NSPopover.willShowNotification, object: nil)
+        return view
+    }
+
+    @objc private func popoverWillOpen(_ notification: Notification) {
+        if backgroundView.superview == nil {
+            if let contentView = contentViewController?.view, let frameView = contentView.superview {
+                frameView.wantsLayer = true
+                backgroundView.frame = NSInsetRect(frameView.frame, 1, 1)
+                backgroundView.autoresizingMask = [.width, .height]
+                frameView.addSubview(backgroundView, positioned: .below, relativeTo: contentView)
+            }
+        }
+    }
+
+    var backgroundColor: NSColor? {
+        get {
+            if let bgColor = backgroundView.layer?.backgroundColor {
+                return NSColor(cgColor: bgColor)
+            }
+            return nil
+        }
+        set {
+            backgroundView.wantsLayer = true
+            backgroundView.layer?.backgroundColor = newValue?.cgColor
+        }
     }
 }

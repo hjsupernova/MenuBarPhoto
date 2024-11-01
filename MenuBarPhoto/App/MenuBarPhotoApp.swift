@@ -7,15 +7,13 @@
 
 import SwiftUI
 
-import KeyboardShortcuts
-
-@main
-struct MenuBarPhotoApp: App {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-
-    var body: some Scene {
-        Settings {
-            SettingsScreen()
-        }
-    }
-}
+//@main
+//struct MenuBarPhotoApp: App {
+//    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+//
+//    var body: some Scene {
+//        Settings {
+//            SettingsScreen()
+//        }
+//    }
+//}
