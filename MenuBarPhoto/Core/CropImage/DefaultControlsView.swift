@@ -25,20 +25,14 @@ public struct DefaultControlsView: View {
                 rotation = roundedAngle + .degrees(90)
             }
         } label: {
-            Label("Rotate", systemImage: "rotate.right")
+            Image(systemName: "rotate.right")
                 .font(.title2)
-                #if !os(visionOS)
-                .foregroundColor(.accentColor)
-                #endif
-                .labelStyle(.iconOnly)
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
-                #if !os(visionOS)
+                .foregroundColor(.yellow)
+                .frame(width: 28, height: 28)
                 .background(
                     RoundedRectangle(cornerRadius: 5, style: .continuous)
-                        .fill(.background)
+                        .fill(.white)
                 )
-                #endif
         }
         #if !os(visionOS)
         .buttonStyle(.plain)
@@ -67,18 +61,15 @@ public struct DefaultControlsView: View {
         Button { Task {
             await crop()
         } } label: {
-            Label("Crop", systemImage: "checkmark.circle.fill")
+            Image(systemName: "checkmark")
                 .font(.title2)
-                #if !os(visionOS)
-                .foregroundColor(.accentColor)
-                #endif
-                .labelStyle(.iconOnly)
-                .padding(1)
-                #if !os(visionOS)
+                .foregroundColor(.yellow)
+                .frame(width: 28, height: 28)
                 .background(
-                    Circle().fill(.background)
+                    Circle().fill(.white)
+//                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+//                        .fill(.white)
                 )
-                #endif
         }
         #if !os(visionOS)
         .buttonStyle(.plain)

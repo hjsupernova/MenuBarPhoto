@@ -184,7 +184,7 @@ struct PageControl: View {
         HStack(spacing: 8) {
             ForEach(photos, id: \.self) { photo in
                 Circle()
-                    .fill(photo.id == scrolledID ? Color.blue : Color.gray)
+                    .fill(photo.id == scrolledID ? Color("bunny-yello") : Color.gray)
                     .frame(width: 8, height: 8)
             }
         }
