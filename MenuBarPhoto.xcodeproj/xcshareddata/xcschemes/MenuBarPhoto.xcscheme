@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CE5324732C6B607A00A04FB6"
-               BuildableName = "MenuBarPhoto.app"
+               BuildableName = "Bunny.app"
                BlueprintName = "MenuBarPhoto"
                ReferencedContainer = "container:MenuBarPhoto.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE5324732C6B607A00A04FB6"
-            BuildableName = "MenuBarPhoto.app"
+            BuildableName = "Bunny.app"
             BlueprintName = "MenuBarPhoto"
             ReferencedContainer = "container:MenuBarPhoto.xcodeproj">
          </BuildableReference>
@@ -68,7 +68,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE5324732C6B607A00A04FB6"
-            BuildableName = "MenuBarPhoto.app"
+            BuildableName = "Bunny.app"
             BlueprintName = "MenuBarPhoto"
             ReferencedContainer = "container:MenuBarPhoto.xcodeproj">
          </BuildableReference>
