@@ -14,6 +14,7 @@ import UIKit
 public struct CropImageView<Controls: View, CutHole: View>: View {
     let photo: Photo
     @Binding var photos: [Photo]
+    @EnvironmentObject private var appDelegate: AppDelegate
 
     /// Defines a custom view overlaid on the image cropper.
     ///
@@ -148,6 +149,8 @@ public struct CropImageView<Controls: View, CutHole: View>: View {
             fulfillTargetFrame: fulfillTargetFrame
         )
         .frame(width: targetSize.width, height: targetSize.height)
+        .environmentObject(appDelegate)
+        
         if #available(iOS 16.0, macOS 13.0, visionOS 1.0, *) {
             let renderer = ImageRenderer(content: snapshotView)
             renderer.scale = targetScale
@@ -242,14 +245,6 @@ public struct CropImageView<Controls: View, CutHole: View>: View {
             .background(viewSizeReadingView)
             .overlay(control)
     }
-
-    class Tracker {
-        deinit {
-            print("ContentView deallocated")
-        }
-    }
-
-    private let tracker = Tracker()
 }
 
 //struct CropImageView_Previews: PreviewProvider {
