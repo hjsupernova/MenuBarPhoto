@@ -242,6 +242,14 @@ public struct CropImageView<Controls: View, CutHole: View>: View {
             .background(viewSizeReadingView)
             .overlay(control)
     }
+
+    class Tracker {
+        deinit {
+            print("ContentView deallocated")
+        }
+    }
+
+    private let tracker = Tracker()
 }
 
 //struct CropImageView_Previews: PreviewProvider {

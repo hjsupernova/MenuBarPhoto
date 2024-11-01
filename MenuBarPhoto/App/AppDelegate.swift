@@ -19,6 +19,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private var settingsWindow: NSWindow!
     private var cropWindow: NSWindow!
 
+    private var eventMonitor: Any? // Reference to the event monitor
+    @Published var scrollEvent: NSEvent?
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 //        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
@@ -118,6 +121,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             cropWindow.close()
         }
 
+        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel, handler: { event in
+            self.scrollEvent = event
+
+            return event
+        })
+
         cropWindow = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 400, height: 400),
             styleMask: [.closable, .titled],
@@ -129,6 +138,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         cropWindow.contentView = contentView
         cropWindow.makeKeyAndOrderFront(nil)
         cropWindow.styleMask.remove(.resizable)
+        cropWindow.delegate = self
 
         NSApplication.shared.activate()
         let controller = NSWindowController(window: cropWindow)
@@ -141,6 +151,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @objc
     func quit() {
         NSApplication.shared.terminate(nil)
+    }
+}
+
+extension AppDelegate: NSWindowDelegate {
+    func windowWillClose(_ notification: Notification) {
+        // Clean up any references
+        eventMonitor = nil
+
+        cropWindow?.contentView = nil
+        cropWindow?.delegate = nil
+        cropWindow = nil
     }
 }
 

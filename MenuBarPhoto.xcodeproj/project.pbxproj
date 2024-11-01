@@ -29,8 +29,9 @@
 		CE260D462C6F9193004B154F /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = CE260D452C6F9193004B154F /* .swiftlint.yml */; };
 		CE53247C2C6B607C00A04FB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE53247B2C6B607C00A04FB6 /* Assets.xcassets */; };
 		CE53247F2C6B607C00A04FB6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE53247E2C6B607C00A04FB6 /* Preview Assets.xcassets */; };
+		CEAB4B802CD4A4F00029F848 /* PhotoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */; };
+		CEAB4B822CD4A8EB0029F848 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB4B812CD4A8EB0029F848 /* main.swift */; };
 		CED4C4B52CC11FCA0001D164 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CED4C4B42CC11FCA0001D164 /* Kingfisher */; };
-		CEDEAB6D2CC8DF5C00FEE28D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDEAB6C2CC8DF5C00FEE28D /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,7 +56,8 @@
 		CE53247B2C6B607C00A04FB6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE53247E2C6B607C00A04FB6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CE5324802C6B607C00A04FB6 /* MenuBarPhoto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBarPhoto.entitlements; sourceTree = "<group>"; };
-		CEDEAB6C2CC8DF5C00FEE28D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoScrollView.swift; sourceTree = "<group>"; };
+		CEAB4B812CD4A8EB0029F848 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +95,7 @@
 			children = (
 				CE260D332C6F9002004B154F /* MenuBarPhotoApp.swift */,
 				CE260D272C6F8F5B004B154F /* AppDelegate.swift */,
-				CEDEAB6C2CC8DF5C00FEE28D /* main.swift */,
+				CEAB4B812CD4A8EB0029F848 /* main.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -101,7 +103,7 @@
 		CE260D292C6F8F65004B154F /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				CE260D2B2C6F8FB7004B154F /* HomeView.swift */,
+				CEAB4B7E2CD4A4E30029F848 /* Home */,
 				CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */,
 			);
 			path = Core;
@@ -171,6 +173,15 @@
 				CE53247E2C6B607C00A04FB6 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CEAB4B7E2CD4A4E30029F848 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				CE260D2B2C6F8FB7004B154F /* HomeView.swift */,
+				CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,7 +291,7 @@
 			files = (
 				CE260D322C6F8FBD004B154F /* Utilities.swift in Sources */,
 				CE235E4A2CC2537200BF3DFD /* DefaultCutHoleShape.swift in Sources */,
-				CEDEAB6D2CC8DF5C00FEE28D /* main.swift in Sources */,
+				CEAB4B822CD4A8EB0029F848 /* main.swift in Sources */,
 				CE235E482CC2537200BF3DFD /* CropImageView.swift in Sources */,
 				CE235E4E2CC2537200BF3DFD /* UnderlyingImageView.swift in Sources */,
 				CE260D312C6F8FBD004B154F /* Constants.swift in Sources */,
@@ -290,6 +301,7 @@
 				CE235E472CC2537200BF3DFD /* Comparable+clamped.swift in Sources */,
 				CE260D342C6F9002004B154F /* MenuBarPhotoApp.swift in Sources */,
 				CE235E492CC2537200BF3DFD /* DefaultControlsView.swift in Sources */,
+				CEAB4B802CD4A4F00029F848 /* PhotoScrollView.swift in Sources */,
 				CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */,
 				CE235E4B2CC2537200BF3DFD /* DefaultCutHoleView.swift in Sources */,
 				CE260D2D2C6F8FB7004B154F /* HomeView.swift in Sources */,

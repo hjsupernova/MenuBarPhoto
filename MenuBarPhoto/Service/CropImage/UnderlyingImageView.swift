@@ -21,6 +21,7 @@ struct UnderlyingImageView: View {
     var viewSize: CGSize
     var targetSize: CGSize
     var fulfillTargetFrame: Bool
+    @EnvironmentObject private var appDelegate: AppDelegate
 
     @State private var tempOffset: CGSize = .zero
     @State private var tempScale: CGFloat = 1
@@ -90,15 +91,6 @@ struct UnderlyingImageView: View {
         scale = min(widthScale, heightScale)
     }
 
-    private func setupScrollMonitor() {
-        NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { event in
-            if isHovering {
-                scrolling = true
-                scale = scale + event.scrollingDeltaY/1000
-            }
-            return event
-        }
-    }
     var imageView: Image {
 #if os(macOS)
         Image(nsImage: image)
@@ -169,8 +161,14 @@ struct UnderlyingImageView: View {
             .onHover { hovering in
                 isHovering = hovering
             }
-            .onAppear {
-//                setupScrollMonitor()
+            .onChange(of: appDelegate.scrollEvent) { oldValue, newValue in
+                if let event = appDelegate.scrollEvent {
+                    if isHovering {
+                        scrolling = true
+                        scale = scale + event.scrollingDeltaY/1000
+                    }
+                }
+
             }
     }
 }
