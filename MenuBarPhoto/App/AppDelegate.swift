@@ -157,6 +157,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 extension AppDelegate: NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
         // Clean up any references
+        if let eventMonitor {
+            NSEvent.removeMonitor(eventMonitor)
+        }
+
         eventMonitor = nil
 
         cropWindow?.contentView = nil
