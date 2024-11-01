@@ -103,6 +103,7 @@
 		CE260D292C6F8F65004B154F /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				CE235E462CC2537200BF3DFD /* CropImage */,
 				CEAB4B7E2CD4A4E30029F848 /* Home */,
 				CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */,
 			);
@@ -129,7 +130,6 @@
 		CE260D392C6F907A004B154F /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				CE235E462CC2537200BF3DFD /* CropImage */,
 				CE260D3A2C6F9097004B154F /* CoreDataStack.swift */,
 			);
 			path = Service;

@@ -16,6 +16,8 @@ public struct DefaultControlsView: View {
     @Binding var rotation: Angle
     var crop: () async -> Void
 
+    @State private var isRotating = false
+
     var rotateButton: some View {
         Button {
             let roundedAngle = Angle.degrees((rotation.degrees / 90).rounded() * 90)
@@ -42,6 +44,13 @@ public struct DefaultControlsView: View {
         .buttonStyle(.plain)
         #endif
         .padding()
+        .disabled(isRotating)
+        .onChange(of: rotation) { _ in
+            isRotating = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                isRotating = false
+            }
+        }
     }
 
     var resetButton: some View {
