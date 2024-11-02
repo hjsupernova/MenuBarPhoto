@@ -134,7 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             defer: false
         )
 
-        cropWindow.title = "Crop your Image"
+        cropWindow.title = "Move & Scale"
         cropWindow.contentView = contentView
         cropWindow.makeKeyAndOrderFront(nil)
         cropWindow.styleMask.remove(.resizable)

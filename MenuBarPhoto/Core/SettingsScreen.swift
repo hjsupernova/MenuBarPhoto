@@ -17,6 +17,10 @@ struct SettingsScreen: View {
     var body: some View {
         Form {
             Section {
+                Text("You've opened your memories \(accessCount) times")
+            }
+
+            Section {
                 KeyboardShortcuts.Recorder("Toggle Gallery", name: .togglePopover)
             }
 
@@ -37,6 +41,7 @@ struct SettingsScreen: View {
                     }
                 }
             }
+
         }
         .formStyle(.grouped)
         .frame(width: 400)
