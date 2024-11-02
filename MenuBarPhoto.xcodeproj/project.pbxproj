@@ -58,6 +58,7 @@
 		CE5324802C6B607C00A04FB6 /* MenuBarPhoto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBarPhoto.entitlements; sourceTree = "<group>"; };
 		CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoScrollView.swift; sourceTree = "<group>"; };
 		CEAB4B812CD4A8EB0029F848 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		CEEA30BD2CD60E4B009193C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +156,7 @@
 		CE5324762C6B607A00A04FB6 /* MenuBarPhoto */ = {
 			isa = PBXGroup;
 			children = (
+				CEEA30BD2CD60E4B009193C0 /* Info.plist */,
 				CE260D232C6F8F13004B154F /* App */,
 				CE260D292C6F8F65004B154F /* Core */,
 				CE260D2A2C6F8F9D004B154F /* Extension */,
@@ -444,6 +446,7 @@
 				DEVELOPMENT_TEAM = C9D4D98Z8R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenuBarPhoto/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Bunny;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -473,6 +476,7 @@
 				DEVELOPMENT_TEAM = C9D4D98Z8R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MenuBarPhoto/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Bunny;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_LSUIElement = YES;
