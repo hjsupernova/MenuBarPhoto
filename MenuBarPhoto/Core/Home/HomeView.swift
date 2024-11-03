@@ -75,6 +75,41 @@ struct HomeView: View {
     }
 }
 
+struct InstructionText: View {
+    @EnvironmentObject private var appDelegate: AppDelegate
+
+    var body: some View {
+        ZStack {
+            VStack {
+                HStack {
+                    Spacer()
+
+                    Button {
+                        appDelegate.openSettingsWindow()
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .buttonStyle(ActionButtonStyle())
+                }
+                Spacer()
+            }
+            .padding(8)
+
+            VStack(spacing: 12) {
+                Image(systemName: "photo.badge.arrow.down")
+                    .font(.system(size: 32))
+                    .foregroundColor(.secondary)
+
+                Text("Drag & Drop your image")
+                    .font(.system(size: 15, weight: .regular))  // System default size for macOS
+                    .foregroundColor(.secondary)
+
+            }
+        }
+        .frame(width: 300, height: 300)
+    }
+}
+
 struct DropOverLay: View {
     @Binding var isTargeted: Bool
     @Binding var photos: [Photo]
