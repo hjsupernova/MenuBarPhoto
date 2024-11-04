@@ -60,10 +60,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     func showMenu() {
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Toggle Gallery", action: #selector(togglePopover), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Toggle Bunny", action: #selector(togglePopover), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettingsWindow), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Quit Gallery", action: #selector(quit), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Quit Bunny", action: #selector(quit), keyEquivalent: ""))
 
         statusItem.menu = menu
         statusItem.button?.performClick(nil)

@@ -21,7 +21,7 @@ struct SettingsScreen: View {
             }
 
             Section {
-                KeyboardShortcuts.Recorder("Toggle Gallery", name: .togglePopover)
+                KeyboardShortcuts.Recorder("Toggle Bunny", name: .togglePopover)
             }
 
             Section {
@@ -30,7 +30,7 @@ struct SettingsScreen: View {
 
             Section {
                 HStack {
-                    Text("Quit Gallery")
+                    Text("Quit Bunny")
 
                     Spacer()
 
