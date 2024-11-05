@@ -98,11 +98,11 @@ struct InstructionText: View {
             VStack(spacing: 12) {
                 Image(systemName: "photo.badge.arrow.down")
                     .font(.system(size: 32))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
 
                 Text("Drag & Drop your image")
                     .font(.system(size: 15, weight: .regular))  // System default size for macOS
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
 
             }
         }
