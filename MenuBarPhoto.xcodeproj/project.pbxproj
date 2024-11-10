@@ -31,6 +31,7 @@
 		CE53247F2C6B607C00A04FB6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE53247E2C6B607C00A04FB6 /* Preview Assets.xcassets */; };
 		CEAB4B802CD4A4F00029F848 /* PhotoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */; };
 		CEAB4B822CD4A8EB0029F848 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB4B812CD4A8EB0029F848 /* main.swift */; };
+		CECA4E7E2CE0A38000335214 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CECA4E7D2CE0A38000335214 /* Localizable.xcstrings */; };
 		CED4C4B52CC11FCA0001D164 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CED4C4B42CC11FCA0001D164 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,7 @@
 		CE5324802C6B607C00A04FB6 /* MenuBarPhoto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBarPhoto.entitlements; sourceTree = "<group>"; };
 		CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoScrollView.swift; sourceTree = "<group>"; };
 		CEAB4B812CD4A8EB0029F848 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		CECA4E7D2CE0A38000335214 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		CEEA30BD2CD60E4B009193C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +141,7 @@
 		CE53246B2C6B607A00A04FB6 = {
 			isa = PBXGroup;
 			children = (
+				CECA4E7D2CE0A38000335214 /* Localizable.xcstrings */,
 				CE260D452C6F9193004B154F /* .swiftlint.yml */,
 				CE5324762C6B607A00A04FB6 /* MenuBarPhoto */,
 				CE5324752C6B607A00A04FB6 /* Products */,
@@ -235,6 +238,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = CE53246B2C6B607A00A04FB6;
 			packageReferences = (
@@ -259,6 +263,7 @@
 			files = (
 				CE260D462C6F9193004B154F /* .swiftlint.yml in Resources */,
 				CE53247F2C6B607C00A04FB6 /* Preview Assets.xcassets in Resources */,
+				CECA4E7E2CE0A38000335214 /* Localizable.xcstrings in Resources */,
 				CE53247C2C6B607C00A04FB6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,7 +446,7 @@
 				CODE_SIGN_ENTITLEMENTS = MenuBarPhoto/MenuBarPhoto.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"MenuBarPhoto/Preview Content\"";
 				DEVELOPMENT_TEAM = C9D4D98Z8R;
 				ENABLE_PREVIEWS = YES;
@@ -471,7 +476,7 @@
 				CODE_SIGN_ENTITLEMENTS = MenuBarPhoto/MenuBarPhoto.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"MenuBarPhoto/Preview Content\"";
 				DEVELOPMENT_TEAM = C9D4D98Z8R;
 				ENABLE_PREVIEWS = YES;

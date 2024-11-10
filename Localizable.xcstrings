@@ -1,0 +1,141 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "(Maximum 5 images)" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(최대 5개의 이미지)"
+          }
+        }
+      }
+    },
+    "Drag & Drop your image" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지를 끌어다 놓아주세요"
+          }
+        }
+      }
+    },
+    "Drop your image here" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지를 놓아주세요"
+          }
+        }
+      }
+    },
+    "Image limit reached" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지 제한에 도달했어요"
+          }
+        }
+      }
+    },
+    "Launch at login" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그인 시 자동 실행"
+          }
+        }
+      }
+    },
+    "Move & Scale" : {
+      "comment" : "Edit window title",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이동 및 크기 조절"
+          }
+        }
+      }
+    },
+    "Quit Bunny" : {
+      "comment" : "quit button on right click",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunny 종료"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "초기화"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "comment" : "Settings window title",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
+          }
+        }
+      }
+    },
+    "Settings..." : {
+      "comment" : "settings button on right click",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정..."
+          }
+        }
+      }
+    },
+    "Toggle Bunny" : {
+      "comment" : "toggle button on right click",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보기 / 숨기기"
+          }
+        }
+      }
+    },
+    "Toggle Bunny Shortcut" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보기/숨기기 단축키"
+          }
+        }
+      }
+    },
+    "You've opened your memories %lld times" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금까지 %lld번 추억을 열어보셨어요"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
