@@ -21,11 +21,13 @@ struct SettingsScreen: View {
             }
 
             Section {
-                KeyboardShortcuts.Recorder("Toggle Bunny", name: .togglePopover)
+                KeyboardShortcuts.Recorder("Toggle Bunny Shortcut", name: .togglePopover)
             }
 
             Section {
-                LaunchAtLogin.Toggle()
+                LaunchAtLogin.Toggle {
+                    Text("Launch at login")
+                }
             }
 
             Section {

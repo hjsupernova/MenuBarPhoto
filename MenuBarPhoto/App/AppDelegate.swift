@@ -60,10 +60,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     func showMenu() {
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Toggle Bunny", action: #selector(togglePopover), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettingsWindow), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: NSLocalizedString("Toggle Bunny", comment: "toggle button on right click"),
+                                action: #selector(togglePopover),
+                                keyEquivalent: ""))
+
+        menu.addItem(NSMenuItem(title: NSLocalizedString("Settings...", comment: "settings button on right click") ,
+                                action: #selector(openSettingsWindow),
+                                keyEquivalent: ""))
+
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Quit Bunny", action: #selector(quit), keyEquivalent: ""))
+
+        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Bunny", comment: "quit button on right click") ,
+                                action: #selector(quit),
+                                keyEquivalent: ""))
 
         statusItem.menu = menu
         statusItem.button?.performClick(nil)
@@ -102,7 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             defer: false
         )
 
-        settingsWindow.title = "Settings"
+        settingsWindow.title = NSLocalizedString("Settings", comment: "Settings window title")
         settingsWindow.contentView = NSHostingView(rootView: contentView)
         settingsWindow.makeKeyAndOrderFront(nil)
         settingsWindow.styleMask.remove(.resizable)
@@ -134,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             defer: false
         )
 
-        cropWindow.title = "Move & Scale"
+        cropWindow.title = NSLocalizedString("Move & Scale", comment: "Edit window title")
         cropWindow.contentView = contentView
         cropWindow.makeKeyAndOrderFront(nil)
         cropWindow.styleMask.remove(.resizable)
