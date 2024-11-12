@@ -22,6 +22,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private var eventMonitor: Any? // Reference to the event monitor
     @Published var scrollEvent: NSEvent?
 
+    func applicationDidBecomeActive(_ notification: Notification) {
+        if Defaults[.firstOpenDate] == nil {
+            Defaults[.firstOpenDate] = Date()
+        }
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 //        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")

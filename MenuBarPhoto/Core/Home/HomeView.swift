@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import Defaults
 import Kingfisher
 
 struct HomeView: View {
@@ -16,6 +17,7 @@ struct HomeView: View {
     @State private var isHovering = false
     @State private var photos: [Photo]
     @State private var scrolledID: Photo.ID?
+    let ratingService = RatingService()
 
     init(photos: [Photo]) {
         self._photos = State(initialValue: photos)
@@ -69,6 +71,10 @@ struct HomeView: View {
                 DispatchQueue.main.async {
                     photos = newPhotos
                 }
+
+                Defaults[.ratingEventsCount] += 1
+
+                ratingService.askForRatingIfNeeded()
             }
         })
         return true
