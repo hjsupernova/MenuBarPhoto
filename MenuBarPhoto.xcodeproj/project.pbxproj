@@ -32,6 +32,8 @@
 		CEAB4B802CD4A4F00029F848 /* PhotoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */; };
 		CEAB4B822CD4A8EB0029F848 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB4B812CD4A8EB0029F848 /* main.swift */; };
 		CECA4E7E2CE0A38000335214 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CECA4E7D2CE0A38000335214 /* Localizable.xcstrings */; };
+		CECBE3112CE0BB8300352A24 /* RatingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECBE3102CE0BB8300352A24 /* RatingService.swift */; };
+		CECBE3132CE0BFE600352A24 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECBE3122CE0BFE600352A24 /* Bundle.swift */; };
 		CED4C4B52CC11FCA0001D164 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CED4C4B42CC11FCA0001D164 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +62,8 @@
 		CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoScrollView.swift; sourceTree = "<group>"; };
 		CEAB4B812CD4A8EB0029F848 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CECA4E7D2CE0A38000335214 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		CECBE3102CE0BB8300352A24 /* RatingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingService.swift; sourceTree = "<group>"; };
+		CECBE3122CE0BFE600352A24 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		CEEA30BD2CD60E4B009193C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -118,6 +122,7 @@
 			children = (
 				CE260D2F2C6F8FBD004B154F /* Constants.swift */,
 				CE260D302C6F8FBD004B154F /* Utilities.swift */,
+				CECBE3122CE0BFE600352A24 /* Bundle.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				CE260D3A2C6F9097004B154F /* CoreDataStack.swift */,
+				CECBE3102CE0BB8300352A24 /* RatingService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -299,6 +305,7 @@
 				CE260D322C6F8FBD004B154F /* Utilities.swift in Sources */,
 				CE235E4A2CC2537200BF3DFD /* DefaultCutHoleShape.swift in Sources */,
 				CEAB4B822CD4A8EB0029F848 /* main.swift in Sources */,
+				CECBE3112CE0BB8300352A24 /* RatingService.swift in Sources */,
 				CE235E482CC2537200BF3DFD /* CropImageView.swift in Sources */,
 				CE235E4E2CC2537200BF3DFD /* UnderlyingImageView.swift in Sources */,
 				CE260D312C6F8FBD004B154F /* Constants.swift in Sources */,
@@ -308,6 +315,7 @@
 				CE235E472CC2537200BF3DFD /* Comparable+clamped.swift in Sources */,
 				CE260D342C6F9002004B154F /* MenuBarPhotoApp.swift in Sources */,
 				CE235E492CC2537200BF3DFD /* DefaultControlsView.swift in Sources */,
+				CECBE3132CE0BFE600352A24 /* Bundle.swift in Sources */,
 				CEAB4B802CD4A4F00029F848 /* PhotoScrollView.swift in Sources */,
 				CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */,
 				CE235E4B2CC2537200BF3DFD /* DefaultCutHoleView.swift in Sources */,

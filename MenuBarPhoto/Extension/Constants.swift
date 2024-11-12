@@ -16,4 +16,8 @@ extension KeyboardShortcuts.Name {
 
 extension Defaults.Keys {
     static let accessCount = Key<Int>("accessCount", default: 0)
+    static let lastVersionPromptedForReview = Key<String>("lastVersionPromptedForReview", default: "0")
+    static let firstOpenDate = Key<Date?>("firstOpenDate")
+    /// When users add images to the app
+    static let ratingEventsCount = Key<Int>("ratingEventsCount", default: 0)
 }
