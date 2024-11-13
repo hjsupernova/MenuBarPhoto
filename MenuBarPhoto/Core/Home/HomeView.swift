@@ -165,8 +165,6 @@ struct DropOverLay: View {
     }
 }
 
-
-
 #Preview {
     HomeView(photos: [])
 }

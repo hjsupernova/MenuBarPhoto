@@ -199,9 +199,6 @@ struct PageControl: View {
     }
 }
 
-
-
-
 //#Preview {
 //    PhotoScrollView()
 //}

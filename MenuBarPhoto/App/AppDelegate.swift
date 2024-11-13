@@ -70,13 +70,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                                 action: #selector(togglePopover),
                                 keyEquivalent: ""))
 
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Settings...", comment: "settings button on right click") ,
+        menu.addItem(NSMenuItem(title: NSLocalizedString("Settings...", comment: "settings button on right click"),
                                 action: #selector(openSettingsWindow),
                                 keyEquivalent: ""))
 
         menu.addItem(NSMenuItem.separator())
 
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Bunny", comment: "quit button on right click") ,
+        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Bunny", comment: "quit button on right click"),
                                 action: #selector(quit),
                                 keyEquivalent: ""))
 
@@ -93,15 +93,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             } else {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
 
-                /// Make the popover close when users interact with outside
-                /// Without this the popover will stay
-//                popover.contentViewController?.view.window?.makeKey()
-
                 Defaults[.accessCount] += 1
             }
         }
     }
-    
+
     @objc
     func openSettingsWindow() {
         let contentView = SettingsScreen()
@@ -198,7 +194,10 @@ extension NSPopover {
 
         let view = NSView()
         objc_setAssociatedObject(self, &Keys.backgroundViewKey, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        NotificationCenter.default.addObserver(self, selector: #selector(popoverWillOpen(_:)), name: NSPopover.willShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(popoverWillOpen(_:)),
+                                               name: NSPopover.willShowNotification,
+                                               object: nil)
         return view
     }
 
