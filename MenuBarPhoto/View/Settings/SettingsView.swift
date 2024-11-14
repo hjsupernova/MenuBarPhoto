@@ -11,7 +11,7 @@ import Defaults
 import KeyboardShortcuts
 import LaunchAtLogin
 
-struct SettingsScreen: View {
+struct SettingsView: View {
     @Default(.accessCount) var accessCount
 
     var body: some View {
@@ -53,5 +53,5 @@ struct SettingsScreen: View {
 }
 
 #Preview {
-    SettingsScreen()
+    SettingsView()
 }

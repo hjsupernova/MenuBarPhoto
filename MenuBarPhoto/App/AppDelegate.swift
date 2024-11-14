@@ -88,7 +88,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     @objc
     func openSettingsWindow() {
-        let contentView = SettingsScreen()
+        let contentView = SettingsView()
 
         if settingsWindow != nil {
             settingsWindow.close()
