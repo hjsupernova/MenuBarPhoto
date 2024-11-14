@@ -77,7 +77,9 @@ struct PhotoActionButtons: View {
                                                     image: image,
                                                     targetSize: CGSize(width: 300, height: 300),
                                                     targetScale: 3,
-                                                    fulfillTargetFrame: true).environmentObject(appDelegate)
+                                                    fulfillTargetFrame: true)
+                                                    .environmentObject(appDelegate)
+                                                    .frame(width: 400, height: 400)
 
                 let contentView = NSHostingView(rootView: contentRootView)
 

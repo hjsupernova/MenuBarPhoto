@@ -95,7 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
 
         settingsWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 240, height: 340),
+            contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.closable, .titled],
             backing: .buffered,
             defer: false
@@ -115,11 +115,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if cropWindow != nil {
             cropWindow.close()
         }
-        
+
         setupScrollEventMonitor()
 
         cropWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 400),
+            contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.closable, .titled],
             backing: .buffered,
             defer: false
@@ -146,7 +146,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     // MARK: - Menu Actions
-    
+
     @objc func handleClick(_ sender: NSButton) {
         if NSApp.currentEvent?.type == .rightMouseUp {
             showMenu()
