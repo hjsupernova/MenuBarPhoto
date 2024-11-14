@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE14741C2CE636BA00975773 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE14741B2CE636BA00975773 /* Styles.swift */; };
+		CE14741E2CE6380700975773 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE14741D2CE6380700975773 /* Image.swift */; };
 		CE235E472CC2537200BF3DFD /* Comparable+clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E3E2CC2537200BF3DFD /* Comparable+clamped.swift */; };
 		CE235E482CC2537200BF3DFD /* CropImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E3F2CC2537200BF3DFD /* CropImageView.swift */; };
 		CE235E492CC2537200BF3DFD /* DefaultControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E402CC2537200BF3DFD /* DefaultControlsView.swift */; };
@@ -19,7 +21,7 @@
 		CE260D2D2C6F8FB7004B154F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D2B2C6F8FB7004B154F /* HomeView.swift */; };
 		CE260D2E2C6F8FB7004B154F /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */; };
 		CE260D312C6F8FBD004B154F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D2F2C6F8FBD004B154F /* Constants.swift */; };
-		CE260D322C6F8FBD004B154F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D302C6F8FBD004B154F /* Utilities.swift */; };
+		CE260D322C6F8FBD004B154F /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D302C6F8FBD004B154F /* View.swift */; };
 		CE260D342C6F9002004B154F /* MenuBarPhotoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D332C6F9002004B154F /* MenuBarPhotoApp.swift */; };
 		CE260D382C6F9021004B154F /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE260D362C6F9021004B154F /* Model.xcdatamodeld */; };
 		CE260D3B2C6F9097004B154F /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D3A2C6F9097004B154F /* CoreDataStack.swift */; };
@@ -38,6 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE14741B2CE636BA00975773 /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
+		CE14741D2CE6380700975773 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		CE235E3E2CC2537200BF3DFD /* Comparable+clamped.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Comparable+clamped.swift"; sourceTree = "<group>"; };
 		CE235E3F2CC2537200BF3DFD /* CropImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CropImageView.swift; sourceTree = "<group>"; };
 		CE235E402CC2537200BF3DFD /* DefaultControlsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultControlsView.swift; sourceTree = "<group>"; };
@@ -50,7 +54,7 @@
 		CE260D2B2C6F8FB7004B154F /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		CE260D2F2C6F8FBD004B154F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		CE260D302C6F8FBD004B154F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		CE260D302C6F8FBD004B154F /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		CE260D332C6F9002004B154F /* MenuBarPhotoApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarPhotoApp.swift; sourceTree = "<group>"; };
 		CE260D372C6F9021004B154F /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		CE260D3A2C6F9097004B154F /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -82,6 +86,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE14741A2CE6362C00975773 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				CE260D2F2C6F8FBD004B154F /* Constants.swift */,
+				CE14741B2CE636BA00975773 /* Styles.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		CE235E462CC2537200BF3DFD /* CropImage */ = {
 			isa = PBXGroup;
 			children = (
@@ -107,22 +120,22 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		CE260D292C6F8F65004B154F /* Core */ = {
+		CE260D292C6F8F65004B154F /* View */ = {
 			isa = PBXGroup;
 			children = (
 				CE235E462CC2537200BF3DFD /* CropImage */,
 				CEAB4B7E2CD4A4E30029F848 /* Home */,
 				CE260D2C2C6F8FB7004B154F /* SettingsScreen.swift */,
 			);
-			path = Core;
+			path = View;
 			sourceTree = "<group>";
 		};
 		CE260D2A2C6F8F9D004B154F /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				CE260D2F2C6F8FBD004B154F /* Constants.swift */,
-				CE260D302C6F8FBD004B154F /* Utilities.swift */,
 				CECBE3122CE0BFE600352A24 /* Bundle.swift */,
+				CE14741D2CE6380700975773 /* Image.swift */,
+				CE260D302C6F8FBD004B154F /* View.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -167,10 +180,11 @@
 			children = (
 				CEEA30BD2CD60E4B009193C0 /* Info.plist */,
 				CE260D232C6F8F13004B154F /* App */,
-				CE260D292C6F8F65004B154F /* Core */,
+				CE260D292C6F8F65004B154F /* View */,
 				CE260D2A2C6F8F9D004B154F /* Extension */,
 				CE260D352C6F9013004B154F /* Model */,
 				CE260D392C6F907A004B154F /* Service */,
+				CE14741A2CE6362C00975773 /* Shared */,
 				CE53247B2C6B607C00A04FB6 /* Assets.xcassets */,
 				CE5324802C6B607C00A04FB6 /* MenuBarPhoto.entitlements */,
 				CE53247D2C6B607C00A04FB6 /* Preview Content */,
@@ -302,7 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE260D322C6F8FBD004B154F /* Utilities.swift in Sources */,
+				CE260D322C6F8FBD004B154F /* View.swift in Sources */,
 				CE235E4A2CC2537200BF3DFD /* DefaultCutHoleShape.swift in Sources */,
 				CEAB4B822CD4A8EB0029F848 /* main.swift in Sources */,
 				CECBE3112CE0BB8300352A24 /* RatingService.swift in Sources */,
@@ -311,12 +325,14 @@
 				CE260D312C6F8FBD004B154F /* Constants.swift in Sources */,
 				CE260D2E2C6F8FB7004B154F /* SettingsScreen.swift in Sources */,
 				CE260D382C6F9021004B154F /* Model.xcdatamodeld in Sources */,
+				CE14741E2CE6380700975773 /* Image.swift in Sources */,
 				CE235E4D2CC2537200BF3DFD /* PlatformImage.swift in Sources */,
 				CE235E472CC2537200BF3DFD /* Comparable+clamped.swift in Sources */,
 				CE260D342C6F9002004B154F /* MenuBarPhotoApp.swift in Sources */,
 				CE235E492CC2537200BF3DFD /* DefaultControlsView.swift in Sources */,
 				CECBE3132CE0BFE600352A24 /* Bundle.swift in Sources */,
 				CEAB4B802CD4A4F00029F848 /* PhotoScrollView.swift in Sources */,
+				CE14741C2CE636BA00975773 /* Styles.swift in Sources */,
 				CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */,
 				CE235E4B2CC2537200BF3DFD /* DefaultCutHoleView.swift in Sources */,
 				CE260D2D2C6F8FB7004B154F /* HomeView.swift in Sources */,
