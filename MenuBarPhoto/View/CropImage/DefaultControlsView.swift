@@ -34,25 +34,13 @@ public struct DefaultControlsView: View {
                         .fill(.white)
                 )
         }
-        #if !os(visionOS)
         .buttonStyle(.plain)
-        #endif
         .padding()
         .disabled(isRotating)
         .onChange(of: rotation) { _ in
             isRotating = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 isRotating = false
-            }
-        }
-    }
-
-    var resetButton: some View {
-        Button("Reset") {
-            withAnimation {
-                offset = .zero
-                scale = 1
-                rotation = .zero
             }
         }
     }
@@ -67,13 +55,9 @@ public struct DefaultControlsView: View {
                 .frame(width: 28, height: 28)
                 .background(
                     Circle().fill(.white)
-//                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-//                        .fill(.white)
                 )
         }
-        #if !os(visionOS)
         .buttonStyle(.plain)
-        #endif
         .padding()
     }
 
@@ -82,14 +66,6 @@ public struct DefaultControlsView: View {
             Spacer()
             HStack {
                 rotateButton
-//                Spacer()
-//                if #available(iOS 15.0, macOS 13.0, *) {
-//                    resetButton
-//                        .buttonStyle(.bordered)
-//                        .buttonBorderShape(.roundedRectangle)
-//                } else {
-//                    resetButton
-//                }
                 Spacer()
                 cropButton
             }

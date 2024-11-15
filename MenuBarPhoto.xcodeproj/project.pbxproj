@@ -14,7 +14,6 @@
 		CE235E492CC2537200BF3DFD /* DefaultControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E402CC2537200BF3DFD /* DefaultControlsView.swift */; };
 		CE235E4A2CC2537200BF3DFD /* DefaultCutHoleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E412CC2537200BF3DFD /* DefaultCutHoleShape.swift */; };
 		CE235E4B2CC2537200BF3DFD /* DefaultCutHoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E422CC2537200BF3DFD /* DefaultCutHoleView.swift */; };
-		CE235E4C2CC2537200BF3DFD /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = CE235E432CC2537200BF3DFD /* Documentation.docc */; };
 		CE235E4D2CC2537200BF3DFD /* PlatformImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E442CC2537200BF3DFD /* PlatformImage.swift */; };
 		CE235E4E2CC2537200BF3DFD /* UnderlyingImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE235E452CC2537200BF3DFD /* UnderlyingImageView.swift */; };
 		CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE260D272C6F8F5B004B154F /* AppDelegate.swift */; };
@@ -47,7 +46,6 @@
 		CE235E402CC2537200BF3DFD /* DefaultControlsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultControlsView.swift; sourceTree = "<group>"; };
 		CE235E412CC2537200BF3DFD /* DefaultCutHoleShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultCutHoleShape.swift; sourceTree = "<group>"; };
 		CE235E422CC2537200BF3DFD /* DefaultCutHoleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultCutHoleView.swift; sourceTree = "<group>"; };
-		CE235E432CC2537200BF3DFD /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		CE235E442CC2537200BF3DFD /* PlatformImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlatformImage.swift; sourceTree = "<group>"; };
 		CE235E452CC2537200BF3DFD /* UnderlyingImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnderlyingImageView.swift; sourceTree = "<group>"; };
 		CE260D272C6F8F5B004B154F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -111,7 +109,6 @@
 				CE235E402CC2537200BF3DFD /* DefaultControlsView.swift */,
 				CE235E412CC2537200BF3DFD /* DefaultCutHoleShape.swift */,
 				CE235E422CC2537200BF3DFD /* DefaultCutHoleView.swift */,
-				CE235E432CC2537200BF3DFD /* Documentation.docc */,
 				CE235E442CC2537200BF3DFD /* PlatformImage.swift */,
 				CE235E452CC2537200BF3DFD /* UnderlyingImageView.swift */,
 			);
@@ -344,7 +341,6 @@
 				CE260D282C6F8F5B004B154F /* AppDelegate.swift in Sources */,
 				CE235E4B2CC2537200BF3DFD /* DefaultCutHoleView.swift in Sources */,
 				CE260D2D2C6F8FB7004B154F /* HomeView.swift in Sources */,
-				CE235E4C2CC2537200BF3DFD /* Documentation.docc in Sources */,
 				CE260D3B2C6F9097004B154F /* CoreDataStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
