@@ -17,7 +17,8 @@ struct HomeView: View {
     @State private var isHovering = false
     @State private var photos: [Photo]
     @State private var scrolledID: Photo.ID?
-    let ratingService = RatingService()
+
+    let photoService = PhotoService()
 
     init(photos: [Photo]) {
         self._photos = State(initialValue: photos)
@@ -33,7 +34,11 @@ struct HomeView: View {
         }
         .overlay(DropOverLay(isTargeted: $isTargeted, photos: $photos))
         .animation(.default, value: isTargeted)
-        .onDrop(of: [.image], isTargeted: $isTargeted, perform: addDroppedPhoto)
+        .onDrop(of: [.image], isTargeted: $isTargeted) { providers in
+            photoService.addDroppedPhoto(providers: providers, currentPhotoCount: photos.count) { newPhotos in
+                self.photos = newPhotos
+            }
+        }
         .onChange(of: photos) { oldValue, newValue in
             if newValue.count > oldValue.count {
                 scrolledID = newValue.last?.id
@@ -56,28 +61,6 @@ struct HomeView: View {
             scrolledID = photos.first?.id
         }
         .environmentObject(appDelegate)
-    }
-
-    private func addDroppedPhoto(providers: [NSItemProvider]) -> Bool {
-        guard photos.count < 5 else { return false }
-        guard let provider = providers.first else { return false }
-
-        _ = provider.loadDataRepresentation(for: .image, completionHandler: { data, error in
-            if error == nil, let data {
-                CoreDataStack.shared.savePhoto(data)
-
-                let newPhotos = CoreDataStack.shared.fetchPhotos()
-
-                DispatchQueue.main.async {
-                    photos = newPhotos
-                }
-
-                Defaults[.ratingEventsCount] += 1
-
-                ratingService.askForRatingIfNeeded()
-            }
-        })
-        return true
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  RatingService.swift
+//  RatingUtility.swift
 //  MenuBarPhoto
 //
 //  Created by KHJ on 11/10/24.
@@ -10,7 +10,7 @@ import StoreKit
 
 import Defaults
 
-class RatingService {
+class RatingUtility {
     var isDebuggingEnabled: Bool {
         #if DEBUG
             return true
