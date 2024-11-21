@@ -11,7 +11,16 @@ import StoreKit
 import Defaults
 
 class RatingService {
+    var isDebuggingEnabled: Bool {
+        #if DEBUG
+            return true
+        #else
+            return false
+        #endif
+    }
+
     var shouldAskForRating: Bool {
+        guard !isDebuggingEnabled else { return true }
         guard let firstLaunchDate = Defaults[.firstOpenDate] else { return false }
         let timeSinceFirstLaunch = Date().timeIntervalSince(firstLaunchDate)
         let timeUntilRate: TimeInterval = 60 * 60 * 24 * 5
