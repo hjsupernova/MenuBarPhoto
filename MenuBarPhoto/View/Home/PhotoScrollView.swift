@@ -61,34 +61,6 @@ struct PhotoScrollView: View {
     }
 }
 
-struct ActionButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.body)
-            .frame(width: 16, height: 16)
-            .padding(4)
-            .background { Color.black.opacity(0.3) }
-            .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 4))
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-    }
-}
-
-struct MoveButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.body)
-            .frame(width: 16, height: 16)
-            .padding(4)
-            .background { Color.black.opacity(0.3) }
-            .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 4))
-            .opacity(!isEnabled ? 0.0 : configuration.isPressed ? 0.8 : 1.0)
-    }
-}
-
 struct PhotoActionButtons: View {
     @EnvironmentObject private var appDelegate: AppDelegate
     @Binding var photos: [Photo]
@@ -105,7 +77,9 @@ struct PhotoActionButtons: View {
                                                     image: image,
                                                     targetSize: CGSize(width: 300, height: 300),
                                                     targetScale: 3,
-                                                    fulfillTargetFrame: true).environmentObject(appDelegate)
+                                                    fulfillTargetFrame: true)
+                                                    .environmentObject(appDelegate)
+                                                    .frame(width: 400, height: 400)
 
                 let contentView = NSHostingView(rootView: contentRootView)
 
@@ -198,9 +172,6 @@ struct PageControl: View {
         }
     }
 }
-
-
-
 
 //#Preview {
 //    PhotoScrollView()

@@ -146,6 +146,7 @@ struct UnderlyingImageView: View {
             .offset(offset + tempOffset)
             .overlay(interactionView)
             .clipped()
+            // ViewSize도 fixed니 필요 없음. // 생성할 때 필요할 수도..?
             .onChange(of: viewSize) { newValue in
                 setInitialScale(basedOn: newValue)
             }

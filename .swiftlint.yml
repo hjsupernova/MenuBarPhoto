@@ -2,6 +2,8 @@
 disabled_rules:
   - unused_closure_parameter # 미사용 클로저 파라미터 _ 대체
   - file_length # 파일 줄 길이 제한
+  - comment_spacing
+  - legacy_nsgeometry_functions
 
 # 옵트 인 룰
 opt_in_rules:
@@ -37,4 +39,4 @@ excluded:
   - Pods
   - Source/ExcludedFolder
   - Source/ExcludedFile.swift
-  - MenuBarPhoto/Core/CropImage
+  - MenuBarPhoto/View/CropImage

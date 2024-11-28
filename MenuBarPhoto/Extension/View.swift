@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// MARK: - View
-
 extension View {
     func accessHostingWindow(_ onWindow: @escaping (NSWindow?) -> Void) -> some View {
         modifier(WindowViewModifier(onWindow: onWindow))
@@ -80,23 +78,4 @@ extension View {
         self
             .frame(width: size.width, height: size.height)
     }
-}
-
-// MARK: - Image
-
-extension Data {
-    func toNSImage() -> NSImage? {
-        return NSImage(data: self)
-    }
-
-    func toSwiftUIImage() -> Image? {
-        guard let nsImage = self.toNSImage() else { return nil }
-        return Image(nsImage: nsImage)
-    }
-
-    var bitmap: NSBitmapImageRep? { NSBitmapImageRep(data: self) }
-}
-
-extension NSImage {
-    var pngData: Data? { tiffRepresentation?.bitmap?.representation(using: .jpeg, properties: [:])}
 }

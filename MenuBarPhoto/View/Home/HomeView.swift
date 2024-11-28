@@ -17,10 +17,12 @@ struct HomeView: View {
     @State private var isHovering = false
     @State private var photos: [Photo]
     @State private var scrolledID: Photo.ID?
-    let ratingService = RatingService()
 
-    init(photos: [Photo]) {
+    private let photoService: PhotoService
+
+    init(photos: [Photo], photoService: PhotoService) {
         self._photos = State(initialValue: photos)
+        self.photoService = photoService
     }
 
     var body: some View {
@@ -33,51 +35,36 @@ struct HomeView: View {
         }
         .overlay(DropOverLay(isTargeted: $isTargeted, photos: $photos))
         .animation(.default, value: isTargeted)
-        .onDrop(of: [.image], isTargeted: $isTargeted, perform: addDroppedPhoto)
-        .onChange(of: photos) { oldValue, newValue in
-            if newValue.count > oldValue.count {
-                scrolledID = newValue.last?.id
-            } else {
-                let deletedPhoto = oldValue.first { !newValue.contains($0) }
-
-                if let deletedIndex = oldValue.firstIndex(where: { $0.id == deletedPhoto?.id }) {
-                    // If there are photos to the right, select the next one
-                    if deletedIndex < newValue.count {
-                        scrolledID = newValue[deletedIndex].id
-                    } else if !newValue.isEmpty {
-                        scrolledID = newValue.last?.id
-                    } else {
-                        scrolledID = nil
-                    }
-                }
+        .onDrop(of: [.image], isTargeted: $isTargeted) { providers in
+            photoService.addDroppedPhoto(providers: providers, currentPhotoCount: photos.count) { newPhotos in
+                self.photos = newPhotos
             }
         }
+        .onChange(of: photos, updateScrollPosition)
         .onAppear {
             scrolledID = photos.first?.id
         }
         .environmentObject(appDelegate)
     }
 
-    private func addDroppedPhoto(providers: [NSItemProvider]) -> Bool {
-        guard photos.count < 5 else { return false }
-        guard let provider = providers.first else { return false }
+    private func updateScrollPosition(oldPhotos: [Photo], newPhotos: [Photo]) {
+        if newPhotos.count > oldPhotos.count {
+            scrolledID = newPhotos.last?.id
+        } else {
+            let deletedPhoto = oldPhotos.first { !newPhotos.contains($0) }
 
-        _ = provider.loadDataRepresentation(for: .image, completionHandler: { data, error in
-            if error == nil, let data {
-                CoreDataStack.shared.savePhoto(data)
-
-                let newPhotos = CoreDataStack.shared.fetchPhotos()
-
-                DispatchQueue.main.async {
-                    photos = newPhotos
+            if let deletedIndex = oldPhotos.firstIndex(where: { $0.id == deletedPhoto?.id }) {
+                // If there are photos to the right, select the next one
+                if deletedIndex < newPhotos.count {
+                    scrolledID = newPhotos[deletedIndex].id
+                } else if !newPhotos.isEmpty {
+                    scrolledID = newPhotos.last?.id
+                } else {
+                    scrolledID = nil
                 }
-
-                Defaults[.ratingEventsCount] += 1
-
-                ratingService.askForRatingIfNeeded()
             }
-        })
-        return true
+        }
+
     }
 }
 
@@ -165,8 +152,6 @@ struct DropOverLay: View {
     }
 }
 
-
-
 #Preview {
-    HomeView(photos: [])
+    HomeView(photos: [], photoService: PhotoService(ratingUtility: RatingUtility()))
 }

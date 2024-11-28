@@ -23,41 +23,134 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @Published var scrollEvent: NSEvent?
 
     func applicationDidBecomeActive(_ notification: Notification) {
+        checkFirstOpen()
+    }
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        setupStatusItem()
+        setupPopover()
+        setuptKeyboardShortcuts()
+    }
+
+    // MARK: - Setup Functions
+
+    private func setupStatusItem() {
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+
+        guard let statusButton = statusItem.button else { return }
+
+        let icon = NSImage(named: "bunny-svg")
+        icon?.size = NSSize(width: 24, height: 24)
+        icon?.isTemplate = true
+        statusButton.image = icon
+        statusButton.action = #selector(handleClick(_:))
+        statusButton.target = self
+        statusButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
+    }
+
+    private func setupPopover() {
+        popover = NSPopover()
+        popover.contentSize = NSSize(width: 300, height: 300)
+        popover.behavior = .semitransient
+        popover.animates = false
+
+        let hostingController = NSHostingController(rootView: HomeView(photos: CoreDataStack.shared.fetchPhotos(),
+                                                                       photoService: PhotoService(ratingUtility: RatingUtility()))
+                                                    )
+        popover.backgroundColor = .white
+        popover.contentViewController = hostingController
+    }
+
+    private func setuptKeyboardShortcuts() {
+        KeyboardShortcuts.onKeyUp(for: .togglePopover) {
+            self.togglePopover()
+        }
+    }
+
+    private func checkFirstOpen() {
         if Defaults[.firstOpenDate] == nil {
             Defaults[.firstOpenDate] = Date()
         }
     }
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-//        print(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path ?? "nil")
+    // MARK: - Window Management
 
-        if let statusButton = statusItem.button {
-            let icon = NSImage(named: "bunny-svg")
-            icon?.size = NSSize(width: 24, height: 24)
-            icon?.isTemplate = true
-            statusButton.image = icon
-            statusButton.action = #selector(handleClick(_:))
-            statusButton.target = self
-            statusButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
-        }
+    @objc
+    func togglePopover() {
+        guard let button = statusItem.button else { return }
 
-        self.popover = NSPopover()
-        self.popover.contentSize = NSSize(width: 300, height: 300)
-        self.popover.behavior = .semitransient
-        self.popover.animates = false
+        if popover.isShown {
+            popover.performClose(nil)
+        } else {
+            popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
 
-        let hostingController = NSHostingController(rootView: HomeView(photos: CoreDataStack.shared.fetchPhotos()))
-        popover.backgroundColor = .white
-        self.popover.contentViewController = hostingController
-
-        KeyboardShortcuts.onKeyUp(for: .togglePopover) {
-            self.togglePopover()
+            Defaults[.accessCount] += 1
         }
     }
+
+    @objc
+    func openSettingsWindow() {
+        let contentView = SettingsView()
+
+        if settingsWindow != nil {
+            settingsWindow.close()
+        }
+
+        settingsWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
+            styleMask: [.closable, .titled],
+            backing: .buffered,
+            defer: false
+        )
+        settingsWindow.title = NSLocalizedString("Settings", comment: "Settings window title")
+        settingsWindow.contentView = NSHostingView(rootView: contentView)
+        settingsWindow.makeKeyAndOrderFront(nil)
+        settingsWindow.styleMask.remove(.resizable)
+
+        let controller = NSWindowController(window: settingsWindow)
+        controller.showWindow(self)
+        settingsWindow.center()
+        settingsWindow.orderFrontRegardless()
+    }
+
+    func openCropWindow(contentView: NSView) {
+        if cropWindow != nil {
+            cropWindow.close()
+        }
+
+        setupScrollEventMonitor()
+
+        cropWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
+            styleMask: [.closable, .titled],
+            backing: .buffered,
+            defer: false
+        )
+        cropWindow.title = NSLocalizedString("Move & Scale", comment: "Edit window title")
+        cropWindow.contentView = contentView
+        cropWindow.makeKeyAndOrderFront(nil)
+        cropWindow.styleMask.remove(.resizable)
+        cropWindow.delegate = self
+
+        NSApplication.shared.activate()
+        let controller = NSWindowController(window: cropWindow)
+        controller.showWindow(self)
+        cropWindow.center()
+        cropWindow.orderFrontRegardless()
+    }
+
+    private func setupScrollEventMonitor() {
+        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel, handler: { event in
+            self.scrollEvent = event
+
+            return event
+        })
+    }
+
+    // MARK: - Menu Actions
+
     @objc func handleClick(_ sender: NSButton) {
-        let event = NSApp.currentEvent!
-        if event.type == NSEvent.EventType.rightMouseUp {
+        if NSApp.currentEvent?.type == .rightMouseUp {
             showMenu()
         } else {
             togglePopover()
@@ -70,97 +163,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                                 action: #selector(togglePopover),
                                 keyEquivalent: ""))
 
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Settings...", comment: "settings button on right click") ,
+        menu.addItem(NSMenuItem(title: NSLocalizedString("Settings...", comment: "settings button on right click"),
                                 action: #selector(openSettingsWindow),
                                 keyEquivalent: ""))
 
         menu.addItem(NSMenuItem.separator())
 
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Bunny", comment: "quit button on right click") ,
+        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit Bunny", comment: "quit button on right click"),
                                 action: #selector(quit),
                                 keyEquivalent: ""))
 
         statusItem.menu = menu
         statusItem.button?.performClick(nil)
-
         statusItem.menu = nil
-    }
-
-    @objc func togglePopover() {
-        if let button = statusItem.button {
-            if popover.isShown {
-                self.popover.performClose(nil)
-            } else {
-                popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
-
-                /// Make the popover close when users interact with outside
-                /// Without this the popover will stay
-//                popover.contentViewController?.view.window?.makeKey()
-
-                Defaults[.accessCount] += 1
-            }
-        }
-    }
-    
-    @objc
-    func openSettingsWindow() {
-        let contentView = SettingsScreen()
-
-        if settingsWindow != nil {
-            settingsWindow.close()
-        }
-
-        settingsWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 240, height: 340),
-            styleMask: [.closable, .titled],
-            backing: .buffered,
-            defer: false
-        )
-
-        settingsWindow.title = NSLocalizedString("Settings", comment: "Settings window title")
-        settingsWindow.contentView = NSHostingView(rootView: contentView)
-        settingsWindow.makeKeyAndOrderFront(nil)
-        settingsWindow.styleMask.remove(.resizable)
-
-//        NSApplication.shared.activate()
-
-        let controller = NSWindowController(window: settingsWindow)
-        controller.showWindow(self)
-
-        settingsWindow.center()
-        settingsWindow.orderFrontRegardless()
-    }
-
-    func openCropWindow(contentView: NSView) {
-        if cropWindow != nil {
-            cropWindow.close()
-        }
-
-        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel, handler: { event in
-            self.scrollEvent = event
-
-            return event
-        })
-
-        cropWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 400),
-            styleMask: [.closable, .titled],
-            backing: .buffered,
-            defer: false
-        )
-
-        cropWindow.title = NSLocalizedString("Move & Scale", comment: "Edit window title")
-        cropWindow.contentView = contentView
-        cropWindow.makeKeyAndOrderFront(nil)
-        cropWindow.styleMask.remove(.resizable)
-        cropWindow.delegate = self
-
-        NSApplication.shared.activate()
-        let controller = NSWindowController(window: cropWindow)
-        controller.showWindow(self)
-
-        cropWindow.center()
-        cropWindow.orderFrontRegardless()
     }
 
     @objc
@@ -198,7 +213,10 @@ extension NSPopover {
 
         let view = NSView()
         objc_setAssociatedObject(self, &Keys.backgroundViewKey, view, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        NotificationCenter.default.addObserver(self, selector: #selector(popoverWillOpen(_:)), name: NSPopover.willShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(popoverWillOpen(_:)),
+                                               name: NSPopover.willShowNotification,
+                                               object: nil)
         return view
     }
 
