@@ -39,28 +39,31 @@ struct HomeView: View {
                 self.photos = newPhotos
             }
         }
-        .onChange(of: photos) { oldValue, newValue in
-            if newValue.count > oldValue.count {
-                scrolledID = newValue.last?.id
-            } else {
-                let deletedPhoto = oldValue.first { !newValue.contains($0) }
-
-                if let deletedIndex = oldValue.firstIndex(where: { $0.id == deletedPhoto?.id }) {
-                    // If there are photos to the right, select the next one
-                    if deletedIndex < newValue.count {
-                        scrolledID = newValue[deletedIndex].id
-                    } else if !newValue.isEmpty {
-                        scrolledID = newValue.last?.id
-                    } else {
-                        scrolledID = nil
-                    }
-                }
-            }
-        }
+        .onChange(of: photos, updateScrollPosition)
         .onAppear {
             scrolledID = photos.first?.id
         }
         .environmentObject(appDelegate)
+    }
+
+    private func updateScrollPosition(oldPhotos: [Photo], newPhotos: [Photo]) {
+        if newPhotos.count > oldPhotos.count {
+            scrolledID = newPhotos.last?.id
+        } else {
+            let deletedPhoto = oldPhotos.first { !newPhotos.contains($0) }
+
+            if let deletedIndex = oldPhotos.firstIndex(where: { $0.id == deletedPhoto?.id }) {
+                // If there are photos to the right, select the next one
+                if deletedIndex < newPhotos.count {
+                    scrolledID = newPhotos[deletedIndex].id
+                } else if !newPhotos.isEmpty {
+                    scrolledID = newPhotos.last?.id
+                } else {
+                    scrolledID = nil
+                }
+            }
+        }
+
     }
 }
 
