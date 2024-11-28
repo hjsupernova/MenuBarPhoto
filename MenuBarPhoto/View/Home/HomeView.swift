@@ -18,10 +18,11 @@ struct HomeView: View {
     @State private var photos: [Photo]
     @State private var scrolledID: Photo.ID?
 
-    let photoService = PhotoService()
+    private let photoService: PhotoService
 
-    init(photos: [Photo]) {
+    init(photos: [Photo], photoService: PhotoService) {
         self._photos = State(initialValue: photos)
+        self.photoService = photoService
     }
 
     var body: some View {
@@ -152,5 +153,5 @@ struct DropOverLay: View {
 }
 
 #Preview {
-    HomeView(photos: [])
+    HomeView(photos: [], photoService: PhotoService(ratingUtility: RatingUtility()))
 }

@@ -12,7 +12,7 @@ import Defaults
 class PhotoService {
     let ratingUtility: RatingUtility
 
-    init(ratingUtility: RatingUtility = RatingUtility()) {
+    init(ratingUtility: RatingUtility) {
         self.ratingUtility = ratingUtility
     }
 
