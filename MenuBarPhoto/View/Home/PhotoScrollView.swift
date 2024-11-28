@@ -79,7 +79,6 @@ struct PhotoActionButtons: View {
                                                     targetScale: 3,
                                                     fulfillTargetFrame: true)
                                                     .environmentObject(appDelegate)
-                                                    .frame(width: 400, height: 400)
 
                 let contentView = NSHostingView(rootView: contentRootView)
 

@@ -17,7 +17,7 @@ struct UnderlyingImageView: View {
     @Binding var offset: CGSize
     @Binding var scale: CGFloat
     @Binding var rotation: Angle
-    var image: PlatformImage
+    var image: NSImage
     var viewSize: CGSize
     var targetSize: CGSize
     var fulfillTargetFrame: Bool
@@ -170,6 +170,9 @@ struct UnderlyingImageView: View {
                     }
                 }
 
+            }
+            .onAppear {
+                setInitialScale(basedOn: viewSize)
             }
     }
 }

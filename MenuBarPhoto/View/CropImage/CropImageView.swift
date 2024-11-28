@@ -7,100 +7,73 @@
 
 import SwiftUI
 
-/// A view that allows the user to crop an image.
-public struct CropImageView<Controls: View, CutHole: View>: View {
+
+struct CropImageView: View {
+    @State private var offset: CGSize = .zero
+    @State private var scale: CGFloat = 1
+    @State private var rotation: Angle = .zero
+//    @State private var viewSize: CGSize = .init(width: 400, height: 400)
+    let viewSize: CGSize = .init(width: 400, height: 400)
     let photo: Photo
     @Binding var photos: [Photo]
     @EnvironmentObject private var appDelegate: AppDelegate
+    @Environment(\.dismiss) var dismiss
 
-    /// Defines a custom view overlaid on the image cropper.
-    ///
-    /// - Parameters:
-    ///   - offset: The offset binding of the image.
-    ///   - scale: The scale binding of the image.
-    ///   - rotation: The rotation binding of the image.
-    ///   - crop: An async function to trigger crop action. Result will be delivered via ``onCrop``.
-    public typealias ControlClosure<Controls> = (
-        _ offset: Binding<CGSize>,
-        _ scale: Binding<CGFloat>,
-        _ rotation: Binding<Angle>,
-        _ crop: @escaping () async -> ()
-    ) -> Controls
-
-    /// Defines custom view that indicates the cut hole to users.
-    ///
-    /// - Parameters:
-    ///   - targetSize: The size of the cut hole.
-    public typealias CutHoleClosure<CutHole> = (_ targetSize: CGSize) -> CutHole
-
-    /// Errors that could happen during the cropping process.
-    public enum CropError: Error {
-        /// SwiftUI `ImageRenderer` returned nil when calling `nsImage` or `uiImage`.
-        ///
-        /// See [SwiftUI - ImageRenderer](https://developer.apple.com/documentation/swiftui/imagerenderer) for more information.
-        case imageRendererReturnedNil
-        /// `UIGraphicsGetCurrentContext()` call returned `nil`.
-        ///
-        /// It shouldn't happen, but if it does it will only be on iOS versions prior to 16.0.
-        case failedToGetCurrentUIGraphicsContext
-        /// `UIGraphicsGetImageFromCurrentImageContext()` call returned `nil`.
-        ///
-        /// It shouldn't happen, but if it does it will only be on iOS versions prior to 16.0.
-        case failedToGetImageFromCurrentUIGraphicsImageContext
-    }
-
-    /// The image to crop.
-    public var image: PlatformImage
-    /// The expected size of the cropped image, in points.
+    public var image: NSImage
     public var targetSize: CGSize
-    /// The expected scale of the cropped image.
-    ///
-    /// This defines the point to pixel ratio for the output image. Defaults to `1`.
-    public var targetScale: CGFloat = 1
-    /// Limit movement and scaling to make sure the image fills the target frame.
-    ///
-    /// Defaults to `true`.
-    ///
-    /// > Important: This option only works with 90-degree rotations. If the rotation is an angle other than a multiple of 90 degrees, the image will not be guaranteed to fill the target frame.
+    public var targetScale: CGFloat = 3
     public var fulfillTargetFrame: Bool = true
-    /// A closure that will be called when the user finishes cropping.
-    ///
-    /// The error should be a ``CropError``.
 
-    var controls: ControlClosure<Controls>
-    var cutHole: CutHoleClosure<CutHole>
-
-    /// Create a ``CropImageView`` with default UI elements.
     public init(
         photo: Photo,
         photos: Binding<[Photo]>,
-        image: PlatformImage,
+        image: NSImage,
         targetSize: CGSize,
-        targetScale: CGFloat = 1,
+        targetScale: CGFloat = 3,
         fulfillTargetFrame: Bool = true
-    ) where Controls == DefaultControlsView, CutHole == DefaultCutHoleView {
+    ) {
         self.photo = photo
         self._photos = photos
         self.image = image
         self.targetSize = targetSize
         self.targetScale = targetScale
-
-        self.controls = { $offset, $scale, $rotation, crop in
-            DefaultControlsView(offset: $offset, scale: $scale, rotation: $rotation, crop: crop)
-        }
-        self.cutHole = { targetSize in
-            DefaultCutHoleView(targetSize: targetSize)
-        }
     }
 
-    @State private var offset: CGSize = .zero
-    @State private var scale: CGFloat = 1
-    @State private var rotation: Angle = .zero
+    var body: some View {
+        ZStack {
+            UnderlyingImageView(
+                offset: $offset, scale: $scale,
+                rotation: $rotation,
+                image: image,
+                viewSize: viewSize,
+                targetSize: targetSize, fulfillTargetFrame: fulfillTargetFrame
+            )
 
-    @State private var viewSize: CGSize = .zero
+            CutHoleView(targetSize: targetSize)
+
+            ControlView(rotation: $rotation, viewSize: viewSize) {
+                do {
+                    let image = try crop()
+                    photo.croppedPhotoData = image.pngData
+
+                    DispatchQueue.global().async {
+                        CoreDataStack.shared.save()
+                    }
+                    photos = CoreDataStack.shared.fetchPhotos()
+
+                    dismiss()
+                } catch {
+                    dismiss()
+                    // failed to crop
+                    // handle error to the alert
+                }
+            }
+        }
+        .frame(width: viewSize.width, height: viewSize.height)
+    }
 
     @MainActor
-    func crop() throws -> PlatformImage {
+    func crop() throws -> NSImage {
         let snapshotView = UnderlyingImageView(
             offset: $offset,
             scale: $scale,
@@ -112,74 +85,154 @@ public struct CropImageView<Controls: View, CutHole: View>: View {
         )
         .frame(width: targetSize.width, height: targetSize.height)
         .environmentObject(appDelegate)
-        
-        if #available(iOS 16.0, macOS 13.0, visionOS 1.0, *) {
-            let renderer = ImageRenderer(content: snapshotView)
-            renderer.scale = targetScale
 
-            if let image = renderer.nsImage {
-                return image
-            } else {
-                throw CropError.imageRendererReturnedNil
-            }
+        let renderer = ImageRenderer(content: snapshotView)
+        renderer.scale = targetScale
 
+        if let image = renderer.nsImage {
+            return image
         } else {
-            fatalError("Cropping is not supported on macOS versions before Ventura 13.0.")
+            throw CropError.imageRendererReturnedNil
         }
     }
+}
 
-    var underlyingImage: some View {
-        UnderlyingImageView(
-            offset: $offset,
-            scale: $scale,
-            rotation: $rotation,
-            image: image,
-            viewSize: viewSize,
-            targetSize: targetSize,
-            fulfillTargetFrame: fulfillTargetFrame
-        )
-        .frame(width: viewSize.width, height: viewSize.height)
-        .clipped()
+
+// MARK: - CutHole
+
+struct CutHoleView: View {
+    var targetSize: CGSize
+    var strokeWidth: CGFloat = 1
+
+    var strokeShape: some View {
+        Rectangle()
+            .strokeBorder(style: .init(lineWidth: 1))
     }
 
-    var viewSizeReadingView: some View {
-        GeometryReader { geo in
-            Rectangle()
-                .fill(.white.opacity(0.0001))
-                .onChange(of: geo.size) { newValue in
-                    viewSize = newValue
-                }
-                .onAppear {
-                    viewSize = geo.size
-                }
-        }
+    var stroke: some View {
+        strokeShape
+            .frame(
+                width: targetSize.width + strokeWidth * 2 ,
+                height: targetSize.height + strokeWidth * 2
+            )
+            .foregroundStyle(.white)
     }
-    @Environment(\.dismiss) var dismiss
 
-    @MainActor var control: some View {
-        controls($offset, $scale, $rotation) {
-            do {
+    var body: some View {
+        CutHoleShape(size: targetSize)
+            .fill(style: FillStyle(eoFill: true))
+            .foregroundStyle(.black.opacity(0.6))
+            .allowsHitTesting(false)
+            .overlay(strokeWidth > 0 ? stroke : nil)
+    }
+}
 
-                let image = try crop()
-                photo.croppedPhotoData = image.pngData
-                
-                DispatchQueue.global().async {
-                    CoreDataStack.shared.save()
-                }
-//                DispatchQueue.main.async {
-                photos = CoreDataStack.shared.fetchPhotos()
-//                }
-                dismiss()
-            } catch {
-                dismiss()
+struct CutHoleShape: Shape {
+    var size: CGSize
+
+    func path(in rect: CGRect) -> Path {
+        let path = CGMutablePath()
+        path.move(to: rect.origin)
+        path.addLine(to: .init(x: rect.maxX, y: rect.minY))
+        path.addLine(to: .init(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: .init(x: rect.minX, y: rect.maxY))
+        path.addLine(to: rect.origin)
+        path.closeSubpath()
+
+
+        let newRect = CGRect(origin: .init(
+            x: rect.midX - size.width / 2.0,
+            y: rect.midY - size.height / 2.0
+        ), size: size)
+
+        // Draw the inner rectangle
+        path.move(to: newRect.origin)
+
+        path.addLine(to: .init(x: newRect.maxX, y: newRect.minY))
+        path.addLine(to: .init(x: newRect.maxX, y: newRect.maxY))
+        path.addLine(to: .init(x: newRect.minX, y: newRect.maxY))
+        path.addLine(to: newRect.origin)
+        path.closeSubpath()
+
+        return Path(path)
+    }
+}
+
+// MARK: - Controls
+
+struct ControlView: View {
+    @Binding var rotation: Angle
+    let viewSize: CGSize
+    var crop: () -> Void
+
+    var body: some View {
+        VStack {
+            Spacer()
+
+            HStack {
+                rotationButton
+
+                Spacer()
+
+                cropButton
             }
         }
+        .frame(width: viewSize.width, height: viewSize.height)
     }
 
-    public var body: some View {
-        cutHole(targetSize)
-            .background(underlyingImage)
-            .background(viewSizeReadingView)
-            .overlay(control)
+    var rotationButton: some View {
+        Button {
+            let roundedAngle = Angle.degrees(
+                (rotation.degrees / 90).rounded() * 90
+            )
+
+            withAnimation(.interactiveSpring) {
+                rotation = roundedAngle + .degrees(90)
+            }
+
+        } label: {
+            Image(systemName: "rotate.right")
+                .font(.title2)
+                .foregroundColor(.yellow)
+                .frame(width: 28, height: 28)
+                .background(
+                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                        .fill(.white)
+                )
+        }
+        .buttonStyle(.plain)
+        .padding()
     }
+
+    var cropButton: some View {
+        Button {
+            crop()
+        } label: {
+            Image(systemName: "checkmark")
+                .font(.title2)
+                .foregroundColor(.yellow)
+                .frame(width: 28, height: 28)
+                .background(
+                    Circle().fill(.white)
+                )
+        }
+        .buttonStyle(.plain)
+        .padding()
+
+    }
+}
+
+public enum CropError: Error {
+    /// SwiftUI `ImageRenderer` returned nil when calling `nsImage` or `uiImage`.
+    ///
+    /// See [SwiftUI - ImageRenderer](https://developer.apple.com/documentation/swiftui/imagerenderer) for more information.
+    case imageRendererReturnedNil
+    /// `UIGraphicsGetCurrentContext()` call returned `nil`.
+    ///
+    /// It shouldn't happen, but if it does it will only be on iOS versions prior to 16.0.
+    case failedToGetCurrentUIGraphicsContext
+    /// `UIGraphicsGetImageFromCurrentImageContext()` call returned `nil`.
+    ///
+    /// It shouldn't happen, but if it does it will only be on iOS versions prior to 16.0.
+    case failedToGetImageFromCurrentUIGraphicsImageContext
 }
