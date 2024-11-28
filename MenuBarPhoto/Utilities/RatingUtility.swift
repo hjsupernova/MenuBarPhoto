@@ -45,4 +45,8 @@ class RatingUtility {
     func applicationVersionProvider() -> String {
         return Bundle.main.appVersion
     }
+
+    func didPerformSignificantEvent() {
+        Defaults[.ratingEventsCount] += 1
+    }
 }

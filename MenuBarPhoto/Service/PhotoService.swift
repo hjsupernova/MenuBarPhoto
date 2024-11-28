@@ -33,7 +33,7 @@ class PhotoService {
                     guard let self = self else { return }
                     completion(newPhotos)
 
-                    Defaults[.ratingEventsCount] += 1
+                    self.ratingUtility.didPerformSignificantEvent()
                     self.ratingUtility.askForRatingIfNeeded()
                 }
             }
