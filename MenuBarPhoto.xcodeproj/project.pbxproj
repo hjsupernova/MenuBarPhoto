@@ -117,14 +117,14 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		CE260D292C6F8F65004B154F /* View */ = {
+		CE260D292C6F8F65004B154F /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				CE235E462CC2537200BF3DFD /* CropImage */,
 				CEAB4B7E2CD4A4E30029F848 /* Home */,
 				CE14741F2CE641BF00975773 /* Settings */,
 			);
-			path = View;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		CE260D2A2C6F8F9D004B154F /* Extension */ = {
@@ -157,7 +157,6 @@
 		CE53246B2C6B607A00A04FB6 = {
 			isa = PBXGroup;
 			children = (
-				CEAEF7FD2D06D1F700569567 /* HomeViewModel.swift */,
 				CECA4E7D2CE0A38000335214 /* Localizable.xcstrings */,
 				CE260D452C6F9193004B154F /* .swiftlint.yml */,
 				CE5324762C6B607A00A04FB6 /* MenuBarPhoto */,
@@ -178,7 +177,7 @@
 			children = (
 				CEEA30BD2CD60E4B009193C0 /* Info.plist */,
 				CE260D232C6F8F13004B154F /* App */,
-				CE260D292C6F8F65004B154F /* View */,
+				CE260D292C6F8F65004B154F /* Core */,
 				CE260D2A2C6F8F9D004B154F /* Extension */,
 				CE260D352C6F9013004B154F /* Model */,
 				CE260D392C6F907A004B154F /* Service */,
@@ -210,10 +209,27 @@
 		CEAB4B7E2CD4A4E30029F848 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				CEAEF8012D06E91700569567 /* View */,
+				CEAEF8022D06E91B00569567 /* ViewModel */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		CEAEF8012D06E91700569567 /* View */ = {
+			isa = PBXGroup;
+			children = (
 				CE260D2B2C6F8FB7004B154F /* HomeView.swift */,
 				CEAB4B7F2CD4A4F00029F848 /* PhotoScrollView.swift */,
 			);
-			path = Home;
+			path = View;
+			sourceTree = "<group>";
+		};
+		CEAEF8022D06E91B00569567 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				CEAEF7FD2D06D1F700569567 /* HomeViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
