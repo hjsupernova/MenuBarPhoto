@@ -10,7 +10,8 @@ import SwiftUI
 import Kingfisher
 
 struct PhotoScrollView: View {
-    @Binding var photos: [Photo]
+    @EnvironmentObject var homeVM: HomeViewModel
+
     @Binding var scrolledID: Photo.ID?
     @Binding var isHovering: Bool
 
@@ -18,7 +19,7 @@ struct PhotoScrollView: View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 0.0) {
-                    ForEach(photos, id: \.self.id) { photo in
+                    ForEach(homeVM.photos, id: \.self.id) { photo in
                         if let data = photo.croppedPhotoData ?? photo.photoData {
                             KFImage(source: .provider(RawImageDataProvider(data: data, cacheKey: data.hashValue.description)))
                                 .resizable()
@@ -40,46 +41,41 @@ struct PhotoScrollView: View {
                         HStack {
                             Spacer()
 
-                            PhotoActionButtons(photos: $photos, scrolledID: $scrolledID)
+                            PhotoActionButtons(scrolledID: $scrolledID)
                         }
 
                         Spacer()
 
-                        PageControl(photos: $photos, scrolledID: $scrolledID)
-
+                        PageControl(scrolledID: $scrolledID)
                     }
 
-                    PhotoMoveButton(scrolledID: $scrolledID, photos: $photos)
+                    PhotoMoveButton(scrolledID: $scrolledID)
                 }
                 .padding(8)
             }
-        }
-
-        .onHover { hovering in
-            isHovering = hovering
         }
     }
 }
 
 struct PhotoActionButtons: View {
     @EnvironmentObject private var appDelegate: AppDelegate
-    @Binding var photos: [Photo]
+    @EnvironmentObject var homeVM: HomeViewModel
+
     @Binding var scrolledID: Photo.ID?
 
     var body: some View {
         HStack {
             Button {
-                guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
+                guard let photo = homeVM.photos.first(where: { $0.id == scrolledID }) else { return }
                 guard let image = photo.photoData?.toNSImage() else { return }
 
                 let contentRootView = CropImageView(photo: photo,
-                                                    photos: $photos,
+                                                    photos: $homeVM.photos,
                                                     image: image,
                                                     targetSize: CGSize(width: 300, height: 300),
                                                     targetScale: 3,
                                                     fulfillTargetFrame: true)
                                                     .environmentObject(appDelegate)
-                                                    .frame(width: 400, height: 400)
 
                 let contentView = NSHostingView(rootView: contentRootView)
 
@@ -87,40 +83,34 @@ struct PhotoActionButtons: View {
             } label: {
                 Image(systemName: "scissors")
             }
-            .buttonStyle(ActionButtonStyle())
 
             Button {
-                guard let photo = photos.first(where: { $0.id == scrolledID }) else { return }
-
-                CoreDataStack.shared.deletePhoto(id: photo.photoId)
-
-                photos = CoreDataStack.shared.fetchPhotos()
+                homeVM.deleteCurrentPhoto(id: scrolledID)
             } label: {
                 Image(systemName: "trash")
             }
-            .buttonStyle(ActionButtonStyle())
 
             Button {
                 appDelegate.openSettingsWindow()
             } label: {
                 Image(systemName: "gearshape")
             }
-            .buttonStyle(ActionButtonStyle())
-
         }
+        .buttonStyle(ActionButtonStyle())
+
     }
 }
 
 struct PhotoMoveButton: View {
+    @EnvironmentObject var homeVM: HomeViewModel
+
     @Binding var scrolledID: Photo.ID?
-    @Binding var photos: [Photo]
 
     var body: some View {
         HStack {
             Button(action: moveToPreviousPhoto) {
                 Image(systemName: "chevron.left.circle.fill")
             }
-            .buttonStyle(MoveButtonStyle())
             .disabled(!canMoveToPrevious)
 
             Spacer()
@@ -128,13 +118,13 @@ struct PhotoMoveButton: View {
             Button(action: moveToNextPhoto) {
                 Image(systemName: "chevron.right.circle.fill")
             }
-            .buttonStyle(MoveButtonStyle())
             .disabled(!canMoveToNext)
         }
+        .buttonStyle(MoveButtonStyle())
     }
 
     private var currentIndex: Int? {
-        photos.firstIndex(where: { $0.id == scrolledID })
+        homeVM.photos.firstIndex(where: { $0.id == scrolledID })
     }
 
     private var canMoveToPrevious: Bool {
@@ -144,27 +134,28 @@ struct PhotoMoveButton: View {
 
     private var canMoveToNext: Bool {
         guard let currentIndex = currentIndex else { return false }
-        return currentIndex < photos.count - 1
+        return currentIndex < homeVM.photos.count - 1
     }
 
     private func moveToPreviousPhoto() {
         guard let currentIndex = currentIndex, currentIndex > 0 else { return }
-        scrolledID = photos[currentIndex - 1].id
+        scrolledID = homeVM.photos[currentIndex - 1].id
     }
 
     private func moveToNextPhoto() {
-        guard let currentIndex = currentIndex, currentIndex < photos.count - 1 else { return }
-        scrolledID = photos[currentIndex + 1].id
+        guard let currentIndex = currentIndex, currentIndex < homeVM.photos.count - 1 else { return }
+        scrolledID = homeVM.photos[currentIndex + 1].id
     }
 }
 
 struct PageControl: View {
-    @Binding var photos: [Photo]
+    @EnvironmentObject var homeVM: HomeViewModel
+
     @Binding var scrolledID: Photo.ID?
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(photos, id: \.self) { photo in
+            ForEach(homeVM.photos, id: \.self) { photo in
                 Circle()
                     .fill(photo.id == scrolledID ? Color("bunny-yello") : Color.gray)
                     .frame(width: 8, height: 8)

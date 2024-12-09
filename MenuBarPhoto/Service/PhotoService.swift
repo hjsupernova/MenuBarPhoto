@@ -16,28 +16,13 @@ class PhotoService {
         self.ratingUtility = ratingUtility
     }
 
-    func addDroppedPhoto(providers: [NSItemProvider],
-                         currentPhotoCount: Int,
-                         completion: @escaping ([Photo]) -> Void) -> Bool {
-        guard currentPhotoCount < 5 else { return false }
-        guard let provider = providers.first else { return false }
+    func fetchPhotos() -> [Photo] {
+        CoreDataStack.shared.fetchPhotos()
+    }
 
-        _ = provider.loadDataRepresentation(for: .image, completionHandler: { data, error in
-
-            if error == nil, let data {
-                CoreDataStack.shared.savePhoto(data)
-
-                let newPhotos = CoreDataStack.shared.fetchPhotos()
-
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    completion(newPhotos)
-
-                    self.ratingUtility.didPerformSignificantEvent()
-                    self.ratingUtility.askForRatingIfNeeded()
-                }
-            }
-        })
-        return true
+    func savePhoto(photo: Data) {
+        CoreDataStack.shared.savePhoto(photo)
+        ratingUtility.didPerformSignificantEvent()
+        ratingUtility.askForRatingIfNeeded()
     }
 }

@@ -53,10 +53,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         popover.contentSize = NSSize(width: 300, height: 300)
         popover.behavior = .semitransient
         popover.animates = false
-
-        let hostingController = NSHostingController(rootView: HomeView(photos: CoreDataStack.shared.fetchPhotos(),
-                                                                       photoService: PhotoService(ratingUtility: RatingUtility()))
-                                                    )
+        
+        let hostingController = NSHostingController(rootView: HomeView())
         popover.backgroundColor = .white
         popover.contentViewController = hostingController
     }

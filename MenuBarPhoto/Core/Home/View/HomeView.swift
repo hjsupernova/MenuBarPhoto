@@ -12,38 +12,46 @@ import Kingfisher
 
 struct HomeView: View {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @StateObject private var homeVM = HomeViewModel(photoService: PhotoService(ratingUtility: RatingUtility()))
 
     @State private var isTargeted: Bool = false
     @State private var isHovering = false
-    @State private var photos: [Photo]
     @State private var scrolledID: Photo.ID?
-
-    private let photoService: PhotoService
-
-    init(photos: [Photo], photoService: PhotoService) {
-        self._photos = State(initialValue: photos)
-        self.photoService = photoService
-    }
 
     var body: some View {
         Group {
-            if !photos.isEmpty {
-                PhotoScrollView(photos: $photos, scrolledID: $scrolledID, isHovering: $isHovering)
+            if !homeVM.photos.isEmpty {
+                PhotoScrollView(scrolledID: $scrolledID, isHovering: $isHovering)
             } else {
                 InstructionText()
             }
         }
-        .overlay(DropOverLay(isTargeted: $isTargeted, photos: $photos))
+        .overlay(DropOverLay(isTargeted: $isTargeted))
         .animation(.default, value: isTargeted)
         .onDrop(of: [.image], isTargeted: $isTargeted) { providers in
-            photoService.addDroppedPhoto(providers: providers, currentPhotoCount: photos.count) { newPhotos in
-                self.photos = newPhotos
-            }
+            guard homeVM.photos.count < 5 else { return false }
+            guard let provider = providers.first else { return false }
+
+            _ = provider.loadDataRepresentation(for: .image, completionHandler: { data, error in
+
+                if error == nil, let data {
+                    DispatchQueue.main.async {
+                        homeVM.saveDroppedPhoto(photoData: data)
+                    }
+                } else {
+                    // error or no data / handle needed
+                }
+            })
+            return true
         }
-        .onChange(of: photos, updateScrollPosition)
+        .onChange(of: homeVM.photos, updateScrollPosition)
+        .onHover { hovering in
+            isHovering = hovering
+        }
         .onAppear {
-            scrolledID = photos.first?.id
+            scrolledID = homeVM.photos.first?.id
         }
+        .environmentObject(homeVM)
         .environmentObject(appDelegate)
     }
 
@@ -104,12 +112,13 @@ struct InstructionText: View {
 }
 
 struct DropOverLay: View {
+    @EnvironmentObject var homeVM: HomeViewModel
+
     @Binding var isTargeted: Bool
-    @Binding var photos: [Photo]
 
     var body: some View {
         if isTargeted {
-            if photos.count < 5 {
+            if homeVM.photos.count < 5 {
                 ZStack {
                     Color.black.opacity(0.7)
 
@@ -153,5 +162,5 @@ struct DropOverLay: View {
 }
 
 #Preview {
-    HomeView(photos: [], photoService: PhotoService(ratingUtility: RatingUtility()))
+    HomeView()
 }
