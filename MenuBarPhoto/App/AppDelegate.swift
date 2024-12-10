@@ -249,7 +249,7 @@ extension NSPopover {
 class SwiftUIWindow: NSWindow {
     override func keyDown(with event: NSEvent) {
         if event.modifierFlags.contains(.command) {
-            if event.charactersIgnoringModifiers == "w" {
+            if event.keyCode == 13 {
                 performClose(self)
             }
         }
