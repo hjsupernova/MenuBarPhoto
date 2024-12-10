@@ -53,7 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         popover.contentSize = NSSize(width: 300, height: 300)
         popover.behavior = .semitransient
         popover.animates = false
-        
+
         let hostingController = NSHostingController(rootView: HomeView())
         popover.backgroundColor = .white
         popover.contentViewController = hostingController
@@ -94,12 +94,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             settingsWindow.close()
         }
 
-        settingsWindow = NSWindow(
+        settingsWindow = SwiftUIWindow(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.closable, .titled],
             backing: .buffered,
             defer: false
         )
+
         settingsWindow.title = NSLocalizedString("Settings", comment: "Settings window title")
         settingsWindow.contentView = NSHostingView(rootView: contentView)
         settingsWindow.makeKeyAndOrderFront(nil)
@@ -118,12 +119,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
         setupScrollEventMonitor()
 
-        cropWindow = NSWindow(
+        cropWindow = SwiftUIWindow(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.closable, .titled],
             backing: .buffered,
             defer: false
         )
+
         cropWindow.title = NSLocalizedString("Move & Scale", comment: "Edit window title")
         cropWindow.contentView = contentView
         cropWindow.makeKeyAndOrderFront(nil)
@@ -240,5 +242,17 @@ extension NSPopover {
             backgroundView.wantsLayer = true
             backgroundView.layer?.backgroundColor = newValue?.cgColor
         }
+    }
+}
+
+/// Enable Command + W to close the window
+class SwiftUIWindow: NSWindow {
+    override func keyDown(with event: NSEvent) {
+        if event.modifierFlags.contains(.command) {
+            if event.charactersIgnoringModifiers == "w" {
+                performClose(self)
+            }
+        }
+        super.keyDown(with: event)
     }
 }

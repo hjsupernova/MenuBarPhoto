@@ -39,4 +39,4 @@ excluded:
   - Pods
   - Source/ExcludedFolder
   - Source/ExcludedFile.swift
-  - MenuBarPhoto/View/CropImage
+  - MenuBarPhoto/Core/CropImage
