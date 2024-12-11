@@ -62,6 +62,17 @@
         }
       }
     },
+    "Please try again with a different image format." : {
+      "comment" : "Alert recovery suggestion ",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다른 이미지 형식으로 다시 시도 해보세요."
+          }
+        }
+      }
+    },
     "Please try again. If the problem persists, restart the app." : {
       "comment" : "Alert recovery suggestion",
       "localizations" : {
@@ -146,6 +157,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "보기/숨기기 단축키"
+          }
+        }
+      }
+    },
+    "Unable to Crop Image" : {
+      "comment" : "Alert title",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미지 자르기 실패"
           }
         }
       }
