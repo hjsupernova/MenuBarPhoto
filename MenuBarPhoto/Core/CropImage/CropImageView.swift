@@ -59,10 +59,11 @@ struct CropImageView: View {
                     DispatchQueue.global().async {
                         CoreDataStack.shared.save()
                     }
-                    photos = CoreDataStack.shared.fetchPhotos()
+                    photos = try CoreDataStack.shared.fetchPhotos()
 
                     dismiss()
                 } catch {
+                    // TODO: Error handled needed
                     dismiss()
                     // failed to crop
                     // handle error to the alert

@@ -51,6 +51,7 @@ struct HomeView: View {
         .onAppear {
             scrolledID = homeVM.photos.first?.id
         }
+        .errorAlert(error: $homeVM.error)
         .environmentObject(homeVM)
         .environmentObject(appDelegate)
     }

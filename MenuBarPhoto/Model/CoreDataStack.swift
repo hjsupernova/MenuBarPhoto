@@ -52,39 +52,25 @@ extension CoreDataStack {
         photo.photoData = data
         photo.dateCreated = Date()
         photo.photoId = UUID()
-        logPhoto.debug("Save new photo")
         save()
     }
 
-    func fetchPhotos() -> [Photo] {
+    func fetchPhotos() throws -> [Photo] {
         let request = NSFetchRequest<Photo>(entityName: "Photo")
         request.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
 
-        do {
-            logPhoto.debug("Fetch saved photos")
-            return try persistentContainer.viewContext.fetch(request)
-        } catch {
-            logPhoto.error("Failed to fetch photo: \(error)")
-            return []
-        }
+        return try persistentContainer.viewContext.fetch(request)
     }
 
-    func deletePhoto(id: UUID?) {
-        guard let id else { return }
+    func deletePhoto(id: UUID) throws {
         let request = NSFetchRequest<Photo>(entityName: "Photo")
         request.predicate = NSPredicate(format: "photoId == %@", id as CVarArg)
 
-        do {
-            let results = try persistentContainer.viewContext.fetch(request)
-            if let photoToDelete = results.first {
-                persistentContainer.viewContext.delete(photoToDelete)
-                save()
-            }
-            logPhoto.debug("Delete one photo")
-        } catch {
-            logPhoto.error("Failed to delete photo: \(error)")
+        let results = try persistentContainer.viewContext.fetch(request)
+        if let photoToDelete = results.first {
+            persistentContainer.viewContext.delete(photoToDelete)
+            save()
         }
-
     }
 }
 
