@@ -38,8 +38,7 @@ extension CoreDataStack {
         do {
             try persistentContainer.viewContext.save()
         } catch {
-            print("Failed to save the context:", error.localizedDescription)
-
+            logDB.error("Failed to save the context: \(error.localizedDescription)")
         }
     }
 }
@@ -53,7 +52,7 @@ extension CoreDataStack {
         photo.photoData = data
         photo.dateCreated = Date()
         photo.photoId = UUID()
-
+        logPhoto.debug("Save new photo")
         save()
     }
 
@@ -62,11 +61,10 @@ extension CoreDataStack {
         request.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: true)]
 
         do {
-
+            logPhoto.debug("Fetch saved photos")
             return try persistentContainer.viewContext.fetch(request)
-
         } catch {
-            print("Error fetching photos: \(error)")
+            logPhoto.error("Failed to fetch photo: \(error)")
             return []
         }
     }
@@ -82,8 +80,9 @@ extension CoreDataStack {
                 persistentContainer.viewContext.delete(photoToDelete)
                 save()
             }
+            logPhoto.debug("Delete one photo")
         } catch {
-            print("Error deleting photo: \(error)")
+            logPhoto.error("Failed to delete photo: \(error)")
         }
 
     }

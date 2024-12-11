@@ -87,7 +87,6 @@ struct UnderlyingImageView: View {
         guard viewSize != .zero else { return }
         let widthScale = viewSize.width / imageWidth
         let heightScale = viewSize.height / imageHeight
-        print("setInitialScale: widthScale: \(widthScale), heightScale: \(heightScale)")
         scale = min(widthScale, heightScale)
     }
 

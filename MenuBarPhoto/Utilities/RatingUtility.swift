@@ -48,5 +48,6 @@ class RatingUtility {
 
     func didPerformSignificantEvent() {
         Defaults[.ratingEventsCount] += 1
+        logRating.debug("Rating event count increased to \(Defaults[.ratingEventsCount])")
     }
 }
