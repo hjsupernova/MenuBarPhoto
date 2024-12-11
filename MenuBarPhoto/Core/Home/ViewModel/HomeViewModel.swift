@@ -12,19 +12,19 @@ class HomeViewModel: ObservableObject {
         case fetchFailed
         case deleteFailed
 
-        // TODO: 현지화
         var errorDescription: String? {
             switch self {
-            case .fetchFailed: return "Unable to Load Photos"
-            case .deleteFailed: return "Unable to Delete Photo"
+            case .fetchFailed: return NSLocalizedString("Unable to Load Photos", comment: "Alert title")
+            case .deleteFailed: return NSLocalizedString("Unable to Delete Photo", comment: "Alert title")
             }
         }
 
-        // TODO: 현지화
         var recoverySuggestion: String? {
             switch self {
-            case .fetchFailed: return "Please try again. If the problem persists, restart the app."
-            case .deleteFailed: return "Please try deleting the photo again. If this keeps happening, restart the app."
+            case .fetchFailed: return NSLocalizedString("Please try again. If the problem persists, restart the app.",
+                                                        comment: "Alert recovery suggestion")
+            case .deleteFailed: return NSLocalizedString("Please try again. If the problem persists, restart the app.",
+                                                         comment: "Alert recovery suggestion")
             }
         }
     }
