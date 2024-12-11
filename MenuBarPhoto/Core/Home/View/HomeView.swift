@@ -33,15 +33,16 @@ struct HomeView: View {
             guard let provider = providers.first else { return false }
 
             _ = provider.loadDataRepresentation(for: .image, completionHandler: { data, error in
+                guard error == nil, let data else {
+                    logPhoto.error("Photo: Failed to load data from dropped image")
+                    return
+                }
 
-                if error == nil, let data {
-                    DispatchQueue.main.async {
-                        homeVM.saveDroppedPhoto(photoData: data)
-                    }
-                } else {
-                    // error or no data / handle needed
+                DispatchQueue.main.async {
+                    homeVM.saveDroppedPhoto(photoData: data)
                 }
             })
+
             return true
         }
         .onChange(of: homeVM.photos, updateScrollPosition)
@@ -51,6 +52,7 @@ struct HomeView: View {
         .onAppear {
             scrolledID = homeVM.photos.first?.id
         }
+        .errorAlert(error: $homeVM.error)
         .environmentObject(homeVM)
         .environmentObject(appDelegate)
     }

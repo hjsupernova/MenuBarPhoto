@@ -16,8 +16,12 @@ class PhotoService {
         self.ratingUtility = ratingUtility
     }
 
-    func fetchPhotos() -> [Photo] {
-        CoreDataStack.shared.fetchPhotos()
+    func fetchPhotos() throws -> [Photo] {
+        return try CoreDataStack.shared.fetchPhotos()
+    }
+
+    func deletePhoto(id: UUID) throws {
+        try CoreDataStack.shared.deletePhoto(id: id)
     }
 
     func savePhoto(photo: Data) {

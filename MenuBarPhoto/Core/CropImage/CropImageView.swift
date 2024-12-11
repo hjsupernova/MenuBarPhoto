@@ -9,10 +9,31 @@ import SwiftUI
 
 
 struct CropImageView: View {
+    enum CropError: LocalizedError {
+        /// SwiftUI `ImageRenderer` returned nil when calling `nsImage` or `uiImage`.
+        ///
+        /// See [SwiftUI - ImageRenderer](https://developer.apple.com/documentation/swiftui/imagerenderer) for more information.
+        case imageRendererReturnedNil
+
+        var errorDescription: String? {
+            switch self {
+            case .imageRendererReturnedNil: NSLocalizedString("Unable to Crop Image", comment: "Alert title")
+            }
+        }
+
+        var recoverySuggestion: String? {
+            switch self {
+            case .imageRendererReturnedNil: NSLocalizedString("Please try again with a different image format.",
+                                                              comment: "Alert recovery suggestion ")
+            }
+        }
+    }
+
     @State private var offset: CGSize = .zero
     @State private var scale: CGFloat = 1
     @State private var rotation: Angle = .zero
-//    @State private var viewSize: CGSize = .init(width: 400, height: 400)
+    @State private var error: Error?
+
     let viewSize: CGSize = .init(width: 400, height: 400)
     let photo: Photo
     @Binding var photos: [Photo]
@@ -59,17 +80,20 @@ struct CropImageView: View {
                     DispatchQueue.global().async {
                         CoreDataStack.shared.save()
                     }
-                    photos = CoreDataStack.shared.fetchPhotos()
+
+                    // TODO: PhotoService를 사용해야함. or ViewModel
+                    photos = try CoreDataStack.shared.fetchPhotos()
 
                     dismiss()
                 } catch {
+                    // TODO: Error handled needed
+                    self.error = CropError.imageRendererReturnedNil
                     dismiss()
-                    // failed to crop
-                    // handle error to the alert
                 }
             }
         }
         .frame(width: viewSize.width, height: viewSize.height)
+        .errorAlert(error: $error)
     }
 
     @MainActor
@@ -220,19 +244,4 @@ struct ControlView: View {
         .padding()
 
     }
-}
-
-public enum CropError: Error {
-    /// SwiftUI `ImageRenderer` returned nil when calling `nsImage` or `uiImage`.
-    ///
-    /// See [SwiftUI - ImageRenderer](https://developer.apple.com/documentation/swiftui/imagerenderer) for more information.
-    case imageRendererReturnedNil
-    /// `UIGraphicsGetCurrentContext()` call returned `nil`.
-    ///
-    /// It shouldn't happen, but if it does it will only be on iOS versions prior to 16.0.
-    case failedToGetCurrentUIGraphicsContext
-    /// `UIGraphicsGetImageFromCurrentImageContext()` call returned `nil`.
-    ///
-    /// It shouldn't happen, but if it does it will only be on iOS versions prior to 16.0.
-    case failedToGetImageFromCurrentUIGraphicsImageContext
 }
