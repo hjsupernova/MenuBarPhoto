@@ -27,6 +27,5 @@ class PhotoService {
     func savePhoto(photo: Data) {
         CoreDataStack.shared.savePhoto(photo)
         ratingUtility.didPerformSignificantEvent()
-        ratingUtility.askForRatingIfNeeded()
     }
 }
