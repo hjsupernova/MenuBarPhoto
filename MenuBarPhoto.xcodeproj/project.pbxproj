@@ -285,6 +285,7 @@
 				en,
 				Base,
 				ko,
+				de,
 			);
 			mainGroup = CE53246B2C6B607A00A04FB6;
 			packageReferences = (
