@@ -23,9 +23,9 @@ class RatingUtility {
         guard !isDebuggingEnabled else { return true }
         guard let firstLaunchDate = Defaults[.firstOpenDate] else { return false }
         let timeSinceFirstLaunch = Date().timeIntervalSince(firstLaunchDate)
-        let timeUntilRate: TimeInterval = 60 * 60 * 24 * 5
+        let timeUntilRate: TimeInterval = 60 * 60 * 24 * 3
 
-        return Defaults[.accessCount] >= 7
+        return Defaults[.accessCount] >= 3
         && Defaults[.ratingEventsCount] >= 2
         && timeSinceFirstLaunch >= timeUntilRate
         && Defaults[.lastVersionPromptedForReview] != applicationVersionProvider()

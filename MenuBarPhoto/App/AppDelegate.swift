@@ -22,6 +22,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private var eventMonitor: Any? // Reference to the event monitor
     @Published var scrollEvent: NSEvent?
 
+    private let ratingUtility = RatingUtility()
+
     func applicationDidBecomeActive(_ notification: Notification) {
         checkFirstOpen()
     }
@@ -83,6 +85,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
 
             Defaults[.accessCount] += 1
+            ratingUtility.askForRatingIfNeeded()
         }
     }
 

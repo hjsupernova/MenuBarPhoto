@@ -3,6 +3,12 @@
   "strings" : {
     "(Maximum 5 images)" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(Maximal 5 Bilder)"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13,6 +19,12 @@
     },
     "Drag & Drop your image" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziehen & Ablegen Ihres Bildes"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -23,6 +35,12 @@
     },
     "Drop your image here" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild hier ablegen"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -33,6 +51,12 @@
     },
     "Image limit reached" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildlimit erreicht"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43,6 +67,12 @@
     },
     "Launch at login" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Start ausführen"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -54,6 +84,12 @@
     "Move & Scale" : {
       "comment" : "Edit window title",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschieben & Skalieren\n"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -65,6 +101,12 @@
     "Please try again with a different image format." : {
       "comment" : "Alert recovery suggestion ",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte versuchen Sie es mit einem anderen Bildformat."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -76,18 +118,12 @@
     "Please try again. If the problem persists, restart the app." : {
       "comment" : "Alert recovery suggestion",
       "localizations" : {
-        "ko" : {
+        "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다시 시도해 주세요. 문제가 계속되면 앱을 재시작하세요."
+            "value" : "Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, starten Sie die App neu."
           }
-        }
-      }
-    },
-    "Please try deleting the photo again. If this keeps happening, restart the app." : {
-      "comment" : "Alert recovery suggestion",
-      "extractionState" : "stale",
-      "localizations" : {
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -99,6 +135,12 @@
     "Quit Bunny" : {
       "comment" : "quit button on right click",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunny beenden"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -107,20 +149,15 @@
         }
       }
     },
-    "Reset" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "초기화"
-          }
-        }
-      }
-    },
     "Settings" : {
       "comment" : "Settings window title",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -132,6 +169,12 @@
     "Settings..." : {
       "comment" : "settings button on right click",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen..."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -143,6 +186,12 @@
     "Toggle Bunny" : {
       "comment" : "toggle button on right click",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunny umschalten"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -153,6 +202,12 @@
     },
     "Toggle Bunny Shortcut" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunny-Verknüpfung umschalten"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -164,6 +219,12 @@
     "Unable to Crop Image" : {
       "comment" : "Alert title",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild konnte nicht zugeschnitten werden"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -175,6 +236,12 @@
     "Unable to Delete Photo" : {
       "comment" : "Alert title",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foto konnte nicht gelöscht werden"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -186,6 +253,12 @@
     "Unable to Load Photos" : {
       "comment" : "Alert title",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder konnten nicht geladen werden"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -196,6 +269,12 @@
     },
     "You've opened your memories %lld times" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sie haben Ihre Erinnerungen %lld Mal geöffnet"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",

@@ -40,6 +40,21 @@ struct HomeView: View {
 
                 DispatchQueue.main.async {
                     homeVM.saveDroppedPhoto(photoData: data)
+
+                    guard let photo = homeVM.photos.last else { return }
+                    guard let image = photo.photoData?.toNSImage() else { return }
+
+                    let contentRootView = CropImageView(photo: photo,
+                                                        photos: $homeVM.photos,
+                                                        image: image,
+                                                        targetSize: CGSize(width: 300, height: 300),
+                                                        targetScale: 3,
+                                                        fulfillTargetFrame: true)
+                                                        .environmentObject(appDelegate)
+
+                    let contentView = NSHostingView(rootView: contentRootView)
+
+                    appDelegate.openCropWindow(contentView: contentView)
                 }
             })
 
